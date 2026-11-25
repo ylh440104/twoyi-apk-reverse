@@ -39,6 +39,7 @@ import androidx.annotation.NonNull;
 import com.cleveroad.androidmanimation.LoadingAnimationView;
 
 import java.util.concurrent.TimeUnit;
+import java.lang.ref.WeakReference;
 
 import io.twoyi.utils.LogEvents;
 import io.twoyi.utils.NavUtils;
@@ -59,6 +60,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
     private TextView mLoadingText;
     private View mLoadingLayout;
     private View mBootLogView;
+    private Thread mBootObserver;
 
 
     private final SurfaceHolder.Callback mSurfaceCallback = new SurfaceHolder.Callback() {
@@ -147,22 +149,29 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         }
         GuestSessionService.start(this);
         showTipsForFirstBoot();
-        RomPreparation.ensureReady(getApplicationContext()).whenComplete((ignored, failure) ->
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) {
-                        return;
-                    }
-                    if (failure != null) {
-                        Log.e(TAG, "ROM preparation failed", failure);
-                        mLoadingView.stopAnimation();
-                        mLoadingText.setText(R.string.boot_failed);
-                        return;
-                    }
-                    if (mSurfaceView.getParent() == null) {
-                        mRootView.addView(mSurfaceView, 0);
-                    }
-                    showBootingProcedure();
-                }));
+        WeakReference<Render2Activity> observer = new WeakReference<>(this);
+        RomPreparation.ensureReady(getApplicationContext()).whenComplete((ignored, failure) -> {
+            Render2Activity activity = observer.get();
+            if (activity != null) {
+                activity.runOnUiThread(() -> activity.onRomPrepared(failure));
+            }
+        });
+    }
+
+    private void onRomPrepared(Throwable failure) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (failure != null) {
+            Log.e(TAG, "ROM preparation failed", failure);
+            mLoadingView.stopAnimation();
+            mLoadingText.setText(R.string.boot_failed);
+            return;
+        }
+        if (mSurfaceView.getParent() == null) {
+            mRootView.addView(mSurfaceView, 0);
+        }
+        showBootingProcedure();
     }
 
     private void showTipsForFirstBoot() {
@@ -190,13 +199,20 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         // mLoadingText.setText(R.string.booting_tips);
         mLoadingText.setVisibility(View.GONE);
         mBootLogView.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        if (mBootObserver != null && mBootObserver.isAlive()) {
+            return;
+        }
+        mBootObserver = new Thread(() -> {
 
             if (true) {
                 boolean success = false;
                 try {
                     success = TwoyiStatusManager.getInstance().waitBoot(15, TimeUnit.SECONDS);
-                } catch (Throwable ignored) {
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                } catch (java.util.concurrent.BrokenBarrierException e) {
+                    return;
                 }
 
                 if (isFinishing() || isDestroyed()) {
@@ -236,7 +252,19 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
                 mLoadingView.stopAnimation();
                 mLoadingLayout.setVisibility(View.GONE);
             });
-        }, "waiting-boot").start();
+        }, "waiting-boot");
+        mBootObserver.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mBootObserver != null) {
+            mBootObserver.interrupt();
+        }
+        if (mLoadingView != null) {
+            mLoadingView.stopAnimation();
+        }
+        super.onDestroy();
     }
 
     @Override
