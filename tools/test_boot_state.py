@@ -58,7 +58,26 @@ public class BootStateTest {
    check(oldWait.get(1,TimeUnit.SECONDS),"old observer reports success after reset");
    state.markStarted();
    check(state.waitBoot(1,TimeUnit.SECONDS),"new boot cannot complete");
-   System.out.println("PASS: timeout recovery, nonblocking completion, repeated observers, reset");
+   java.util.concurrent.atomic.AtomicInteger exitCount = new java.util.concurrent.atomic.AtomicInteger();
+   Runnable exitCb = exitCount::incrementAndGet;
+   state.addExitListener(exitCb);
+   state.markFailed();
+   check(state.isFailed(),"markFailed did not set failed");
+   check(!state.isStarted(),"markFailed did not clear started");
+   check(!state.waitBoot(1,TimeUnit.SECONDS),"waitBoot returned true after failure");
+   check(exitCount.get()==1,"exit listener not called once");
+   state.markFailed();
+   check(exitCount.get()==1,"duplicate markFailed fired listener twice");
+   state.markStarted();
+   check(!state.isStarted(),"markStarted resurrected failed session");
+   state.removeExitListener(exitCb);
+   state.reset();
+   check(!state.isFailed(),"reset did not clear failed");
+   Future<Boolean> failWait=pool.submit(() -> state.waitBoot(10,TimeUnit.SECONDS));
+   Thread.sleep(50);
+   state.markFailed();
+   check(!failWait.get(1,TimeUnit.SECONDS),"waiter did not unblock with false on failure");
+   System.out.println("PASS: timeout recovery, nonblocking completion, repeated observers, reset, failure exit");
   } finally { pool.shutdownNow(); }
  }
 }

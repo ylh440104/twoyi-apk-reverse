@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,7 +33,9 @@ public class TwoyiStatusManager {
     }
 
     private final AtomicBoolean mStarted = new AtomicBoolean(false);
+    private final AtomicBoolean mFailed = new AtomicBoolean(false);
     private final AtomicBoolean mShown = new AtomicBoolean(false);
+    private final CopyOnWriteArrayList<Runnable> mExitListeners = new CopyOnWriteArrayList<>();
 
     private volatile CountDownLatch mBootLatch = new CountDownLatch(1);
 
@@ -45,9 +48,40 @@ public class TwoyiStatusManager {
     }
 
     public synchronized void markStarted() {
+        if (mFailed.get()) {
+            return;
+        }
         if (mStarted.compareAndSet(false, true)) {
             mBootLatch.countDown();
         }
+    }
+
+    public void markFailed() {
+        boolean changed;
+        synchronized (this) {
+            changed = mFailed.compareAndSet(false, true);
+            mStarted.set(false);
+            mBootLatch.countDown();
+        }
+        if (changed) {
+            for (Runnable listener : mExitListeners) {
+                listener.run();
+            }
+        }
+    }
+
+    public boolean isFailed() {
+        return mFailed.get();
+    }
+
+    public void addExitListener(Runnable listener) {
+        if (listener != null) {
+            mExitListeners.addIfAbsent(listener);
+        }
+    }
+
+    public void removeExitListener(Runnable listener) {
+        mExitListeners.remove(listener);
     }
 
     public boolean isStarted() {
@@ -57,6 +91,7 @@ public class TwoyiStatusManager {
     public synchronized void reset() {
         CountDownLatch previous = mBootLatch;
         mStarted.set(false);
+        mFailed.set(false);
         mShown.set(false);
         mBootLatch = new CountDownLatch(1);
         // Release observers of the previous boot; they must not report success.
@@ -72,7 +107,7 @@ public class TwoyiStatusManager {
             if (boot != mBootLatch) {
                 throw new BrokenBarrierException("boot session reset");
             }
-            return mStarted.get();
+            return mStarted.get() && !mFailed.get();
         }
     }
 

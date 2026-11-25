@@ -2,12 +2,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-use jni::objects::JValue;
+use jni::objects::{GlobalRef, JValue};
 use jni::sys::{jclass, jfloat, jint, jobject, JNI_ERR, jstring};
 use jni::JNIEnv;
 use jni::{JavaVM, NativeMethod};
 use log::{error, info, Level, debug};
 use ndk_sys;
+use once_cell::sync::OnceCell;
 use std::ffi::c_void;
 
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -40,6 +41,28 @@ macro_rules! jni_method {
 
 static RENDERER_STARTED: AtomicBool = AtomicBool::new(false);
 static GUEST_START_FAILED: AtomicBool = AtomicBool::new(false);
+static JVM_HANDLE: OnceCell<JavaVM> = OnceCell::new();
+static RENDERER_CLASS: OnceCell<GlobalRef> = OnceCell::new();
+
+fn notify_guest_exited(exit_code: i32) {
+    GUEST_START_FAILED.store(true, Ordering::Release);
+    if let (Some(jvm), Some(clazz)) = (JVM_HANDLE.get(), RENDERER_CLASS.get()) {
+        if let Ok(env) = jvm.attach_current_thread() {
+            let class_obj: jni::objects::JClass = clazz.as_obj().into();
+            let _ = env.call_static_method(
+                class_obj,
+                "onGuestExited",
+                "(I)V",
+                &[JValue::Int(exit_code)],
+            );
+            let _ = env.exception_clear();
+        }
+    }
+}
+
+pub fn guest_failed(_env: JNIEnv, _clz: jclass) -> jint {
+    if GUEST_START_FAILED.load(Ordering::Acquire) { 1 } else { 0 }
+}
 
 #[no_mangle]
 pub fn renderer_init(
@@ -120,16 +143,22 @@ pub fn renderer_init(
         match launch {
             Ok(mut child) => {
                 thread::spawn(move || {
-                    match child.wait() {
-                        Ok(status) => error!("guest init exited: {}", status),
-                        Err(e) => error!("cannot wait for guest init: {}", e),
-                    }
+                    let code = match child.wait() {
+                        Ok(status) => {
+                            error!("guest init exited: {}", status);
+                            status.code().unwrap_or(-1)
+                        }
+                        Err(e) => {
+                            error!("cannot wait for guest init: {}", e);
+                            -1
+                        }
+                    };
                     // Native renderer/input cleanup is not yet restartable.
-                    GUEST_START_FAILED.store(true, Ordering::Release);
+                    notify_guest_exited(code);
                 });
             }
             Err(message) => {
-                GUEST_START_FAILED.store(true, Ordering::Release);
+                notify_guest_exited(-1);
                 error!("{}", message);
                 let _ = env.throw_new("java/lang/IllegalStateException", message);
             }
@@ -201,6 +230,10 @@ unsafe fn register_natives(jvm: &JavaVM, class_name: &str, methods: &[NativeMeth
     };
     debug!("clazz: {:#?}", clazz);
 
+    if let Ok(global_ref) = env.new_global_ref(clazz) {
+        let _ = RENDERER_CLASS.set(global_ref);
+    }
+
     let result = env.register_native_methods(clazz, &methods);
 
     if result.is_ok() {
@@ -238,7 +271,10 @@ unsafe fn JNI_OnLoad(jvm: JavaVM, _reserved: *mut c_void) -> jint {
         ),
         jni_method!(handleTouch, handle_touch, "(Landroid/view/MotionEvent;)V"),
         jni_method!(sendKeycode, send_key_code, "(I)V"),
+        jni_method!(guestFailed, guest_failed, "()I"),
     ];
 
-    register_natives(&jvm, class_name, jni_methods.as_ref())
+    let ret = register_natives(&jvm, class_name, jni_methods.as_ref());
+    let _ = JVM_HANDLE.set(jvm);
+    ret
 }

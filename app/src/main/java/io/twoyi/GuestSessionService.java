@@ -22,7 +22,17 @@ public final class GuestSessionService extends Service {
     private static final String CHANNEL = "guest_session";
     private static final int NOTIFICATION_ID = 1001;
     private final Handler main = new Handler(Looper.getMainLooper());
+    private final Runnable exitListener = this::stopSessionOnMain;
     private boolean destroyed;
+
+    private void stopSessionOnMain() {
+        main.post(() -> {
+            if (!destroyed) {
+                stopForeground(true);
+                stopSelf();
+            }
+        });
+    }
 
     public static void start(Context context) {
         context.startForegroundService(new Intent(context, GuestSessionService.class));
@@ -49,15 +59,16 @@ public final class GuestSessionService extends Service {
         notifications.createNotificationChannel(new NotificationChannel(CHANNEL,
                 getString(R.string.guest_session_channel), NotificationManager.IMPORTANCE_LOW));
         startForeground(NOTIFICATION_ID, notification());
+        TwoyiStatusManager status = TwoyiStatusManager.getInstance();
+        status.addExitListener(exitListener);
+        if (status.isFailed()) {
+            stopSessionOnMain();
+            return;
+        }
         RomPreparation.ensureReady(getApplicationContext()).whenComplete((ignored, failure) -> {
             if (failure != null) {
                 Log.e("GuestSessionService", "ROM preparation failed", failure);
-                main.post(() -> {
-                    if (!destroyed) {
-                        stopForeground(true);
-                        stopSelf();
-                    }
-                });
+                stopSessionOnMain();
             }
         });
     }
@@ -71,6 +82,7 @@ public final class GuestSessionService extends Service {
 
     @Override public void onDestroy() {
         destroyed = true;
+        TwoyiStatusManager.getInstance().removeExitListener(exitListener);
         main.removeCallbacksAndMessages(null);
         super.onDestroy();
     }

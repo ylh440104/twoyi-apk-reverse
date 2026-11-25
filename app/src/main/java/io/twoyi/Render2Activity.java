@@ -62,6 +62,26 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
     private View mLoadingLayout;
     private View mBootLogView;
     private Thread mBootObserver;
+    private final Runnable mExitListener = () -> runOnUiThread(this::showGuestFailedUi);
+
+    private void showGuestFailedUi() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (mBootObserver != null) {
+            mBootObserver.interrupt();
+        }
+        if (mLoadingView != null) {
+            mLoadingView.stopAnimation();
+        }
+        if (mLoadingLayout != null) {
+            mLoadingLayout.setVisibility(View.VISIBLE);
+        }
+        if (mLoadingText != null) {
+            mLoadingText.setVisibility(View.VISIBLE);
+            mLoadingText.setText(R.string.boot_failed);
+        }
+    }
 
 
     private final SurfaceHolder.Callback mSurfaceCallback = new SurfaceHolder.Callback() {
@@ -141,7 +161,11 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoadingView.startAnimation();
 
-        if (started) {
+        TwoyiStatusManager status = TwoyiStatusManager.getInstance();
+        status.addExitListener(mExitListener);
+        if (status.isFailed()) {
+            showGuestFailedUi();
+        } else if (started) {
             GuestSessionService.start(this);
             // Do not reinstall or reinitialize a ROM that is already running.
             mRootView.addView(mSurfaceView, 0);
@@ -237,6 +261,10 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
+                if (TwoyiStatusManager.getInstance().isFailed()) {
+                    runOnUiThread(this::showGuestFailedUi);
+                    return;
+                }
                 if (!success) {
                     LogEvents.trackBootFailure(getApplicationContext());
 
@@ -245,7 +273,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
                     // Continue observing a slow boot; a timeout is not proof
                     // that the guest has exited. Destroying this view cancels
                     // its observer without touching the process-owned guest.
-                    while (!isFinishing() && !isDestroyed()) {
+                    while (!isFinishing() && !isDestroyed() && !TwoyiStatusManager.getInstance().isFailed()) {
                         try {
                             if (TwoyiStatusManager.getInstance().waitBoot(1, TimeUnit.SECONDS)) {
                                 success = true;
@@ -257,6 +285,10 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
                         } catch (java.util.concurrent.BrokenBarrierException e) {
                             return;
                         }
+                    }
+                    if (TwoyiStatusManager.getInstance().isFailed()) {
+                        runOnUiThread(this::showGuestFailedUi);
+                        return;
                     }
                     if (!success) {
                         return;
@@ -277,6 +309,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
 
     @Override
     protected void onDestroy() {
+        TwoyiStatusManager.getInstance().removeExitListener(mExitListener);
         if (mBootObserver != null) {
             mBootObserver.interrupt();
         }
