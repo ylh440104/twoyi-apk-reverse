@@ -26,6 +26,9 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
       - name: Install pinned Android toolchain
         run: sdkmanager 'platforms;android-31' 'build-tools;30.0.3' 'ndk;22.1.7171670'
       - name: Compile Rust JNI with NDK directly
