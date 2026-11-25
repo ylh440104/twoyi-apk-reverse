@@ -5,7 +5,7 @@ on:
     paths:
       - 'app/src/main/java/io/twoyi/**'
       - 'app/rs/src/**'
-      - 'tools/test_boot_state.py'
+      - 'tools/**'
       - '.github/workflows/host-tests.yml'
   pull_request:
   workflow_dispatch:
@@ -27,6 +27,11 @@ jobs:
           java-version: '17'
       - name: Test actual boot state class with Android API stubs
         run: python3 tools/test_boot_state.py
+      - name: Test window replacement callback ordering
+        run: |
+          mkdir -p "$RUNNER_TEMP/window-tests"
+          javac -d "$RUNNER_TEMP/window-tests" app/src/main/java/io/twoyi/WindowOwner.java tools/WindowOwnerTest.java
+          java -cp "$RUNNER_TEMP/window-tests" io.twoyi.WindowOwnerTest
 
   input-stream:
     runs-on: ubuntu-latest

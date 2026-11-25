@@ -52,6 +52,7 @@ import io.twoyi.utils.RomManager;
 public class Render2Activity extends Activity implements View.OnTouchListener {
 
     private static final String TAG = "Render2Activity";
+    private static final WindowOwner WINDOW_OWNER = new WindowOwner();
 
     private SurfaceView mSurfaceView;
 
@@ -76,12 +77,16 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
             float ydpi = displayMetrics.ydpi;
 
             Renderer.init(surface, RomManager.getLoaderPath(getApplicationContext()), xdpi, ydpi, (int) getBestFps());
+            WINDOW_OWNER.attach(holder);
 
             Log.i(TAG, "surfaceCreated");
         }
 
         @Override
         public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+            if (!WINDOW_OWNER.isCurrent(holder)) {
+                return;
+            }
             Surface surface = holder.getSurface();
             Renderer.resetWindow(surface, 0, 0, mSurfaceView.getWidth(), mSurfaceView.getHeight());
             Log.i(TAG, "surfaceChanged: " + mSurfaceView.getWidth() + "x" + mSurfaceView.getHeight());
@@ -89,7 +94,9 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
 
         @Override
         public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-            Renderer.removeWindow(holder.getSurface());
+            if (WINDOW_OWNER.detach(holder)) {
+                Renderer.removeWindow(holder.getSurface());
+            }
             Log.i(TAG, "surfaceDestroyed!");
         }
     };
