@@ -76,8 +76,20 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
             float xdpi = displayMetrics.xdpi;
             float ydpi = displayMetrics.ydpi;
 
-            Renderer.init(surface, RomManager.getLoaderPath(getApplicationContext()), xdpi, ydpi, (int) getBestFps());
-            WINDOW_OWNER.attach(holder);
+            try {
+                Renderer.init(surface, RomManager.getLoaderPath(getApplicationContext()), xdpi, ydpi, (int) getBestFps());
+                WINDOW_OWNER.attach(holder);
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "Guest launch failed", e);
+                if (mBootObserver != null) {
+                    mBootObserver.interrupt();
+                }
+                mLoadingView.stopAnimation();
+                mLoadingText.setVisibility(View.VISIBLE);
+                mLoadingText.setText(R.string.boot_failed);
+                stopService(new android.content.Intent(Render2Activity.this, GuestSessionService.class));
+                return;
+            }
 
             Log.i(TAG, "surfaceCreated");
         }

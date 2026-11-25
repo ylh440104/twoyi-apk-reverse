@@ -39,6 +39,7 @@ macro_rules! jni_method {
 }
 
 static RENDERER_STARTED: AtomicBool = AtomicBool::new(false);
+static GUEST_START_FAILED: AtomicBool = AtomicBool::new(false);
 
 #[no_mangle]
 pub fn renderer_init(
@@ -51,12 +52,18 @@ pub fn renderer_init(
     fps: jint,
 ) {
     debug!("renderer_init");
+    if GUEST_START_FAILED.load(Ordering::Acquire) {
+        let _ = env.throw_new("java/lang/IllegalStateException",
+            "Guest startup previously failed; restart the host process before retrying");
+        return;
+    }
     let window = unsafe { ndk_sys::ANativeWindow_fromSurface(env.get_native_interface(), surface) };
 
     let window = match std::ptr::NonNull::new(window) {
         Some(x) => x,
         None => {
             error!("ANativeWindow_fromSurface was null!");
+            let _ = env.throw_new("java/lang/IllegalStateException", "No valid render Surface");
             return;
         }
     };
@@ -96,17 +103,37 @@ pub fn renderer_init(
             }
         });
 
-        let loader_path: String = env.get_string(loader.into()).unwrap().into();
-        let working_dir = "/data/data/io.twoyi/rootfs";
-        let log_path = "/data/data/io.twoyi/log.txt";
-        let outputs = File::create(log_path).unwrap();
-        let errors = outputs.try_clone().unwrap();
-        let _ = Command::new("./init")
-            .current_dir(working_dir)
-            .env("TYLOADER", loader_path)
-            .stdout(Stdio::from(outputs))
-            .stderr(Stdio::from(errors))
-            .spawn();
+        let launch = (|| -> Result<std::process::Child, String> {
+            let loader_path: String = env.get_string(loader.into())
+                .map_err(|e| format!("Invalid loader path: {}", e))?.into();
+            let outputs = File::create("/data/data/io.twoyi/log.txt")
+                .map_err(|e| format!("Cannot open guest log: {}", e))?;
+            let errors = outputs.try_clone()
+                .map_err(|e| format!("Cannot duplicate guest log: {}", e))?;
+            Command::new("./init")
+                .current_dir("/data/data/io.twoyi/rootfs")
+                .env("TYLOADER", loader_path)
+                .stdout(Stdio::from(outputs))
+                .stderr(Stdio::from(errors))
+                .spawn().map_err(|e| format!("Cannot start guest init: {}", e))
+        })();
+        match launch {
+            Ok(mut child) => {
+                thread::spawn(move || {
+                    match child.wait() {
+                        Ok(status) => error!("guest init exited: {}", status),
+                        Err(e) => error!("cannot wait for guest init: {}", e),
+                    }
+                    // Native renderer/input cleanup is not yet restartable.
+                    GUEST_START_FAILED.store(true, Ordering::Release);
+                });
+            }
+            Err(message) => {
+                GUEST_START_FAILED.store(true, Ordering::Release);
+                error!("{}", message);
+                let _ = env.throw_new("java/lang/IllegalStateException", message);
+            }
+        }
     }
 }
 
