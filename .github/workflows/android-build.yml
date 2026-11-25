@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: '17'
       - uses: android-actions/setup-android@v3
       - name: Install pinned Android toolchain
         run: sdkmanager 'platforms;android-31' 'build-tools;30.0.3' 'ndk;22.1.7171670'
@@ -47,6 +47,10 @@ jobs:
           unzip -p "$RUNNER_TEMP/legacy.apk" assets/rootfs.7z > app/src/main/assets/rootfs.7z
           unzip -p "$RUNNER_TEMP/legacy.apk" assets/rom.ini > app/src/main/assets/rom.ini
           test -s app/src/main/assets/rootfs.7z
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
       - name: Assemble debug APK
         working-directory: source
         run: bash gradlew --no-daemon :app:assembleDebug -x cargoBuild --stacktrace
