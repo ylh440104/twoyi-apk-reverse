@@ -21,6 +21,7 @@ use std::process::{Command, Stdio};
 mod input;
 mod event_stream;
 mod touch_slots;
+mod key_events;
 mod renderer_bindings;
 
 /// ## Examples

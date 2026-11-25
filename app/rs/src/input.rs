@@ -268,17 +268,21 @@ fn generate_key_device() -> device_info {
     copy_to_cstr(KEY_PATH, &mut info.physical_location);
     copy_to_cstr(KEY_DEVICE_UNIQUE_ID, &mut info.unique_id);
 
-    info.key_bitmask[14] = 0x1C;
+    for &(_, code) in crate::key_events::KEY_MAP {
+        let bit = code as usize;
+        info.key_bitmask[bit / 8] |= 1 << (bit % 8);
+    }
 
     info
 }
 
-pub fn send_key_code(_keycode: i32) {
-    if let Some(ref tx) = *KEY_SENDER.lock().unwrap() {
-        input_event_write(tx, EV_KEY, KEY_BACK, 1);
-        input_event_write(tx, EV_SYN, SYN_REPORT, SYN_REPORT);
-        input_event_write(tx, EV_KEY, KEY_BACK, 0);
-        input_event_write(tx, EV_SYN, SYN_REPORT, SYN_REPORT);
+pub fn send_key_code(keycode: i32) {
+    if let Some(events) = crate::key_events::click(keycode) {
+        if let Some(ref tx) = *KEY_SENDER.lock().unwrap() {
+            for (kind, code, value) in events {
+                input_event_write(tx, kind, code, value);
+            }
+        }
     }
 }
 

@@ -303,8 +303,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
-        Renderer.sendKeycode(KeyEvent.KEYCODE_HOME);
+        Renderer.sendKeycode(KeyEvent.KEYCODE_BACK);
     }
 
     private float getBestFps() {
