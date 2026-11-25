@@ -39,3 +39,7 @@ jobs:
         run: |
           rustc --edition=2021 --test app/rs/src/event_stream.rs -o "$RUNNER_TEMP/event-stream-tests"
           timeout 20 "$RUNNER_TEMP/event-stream-tests"
+      - name: Test sparse pointer IDs and cancelled gestures
+        run: |
+          rustc --edition=2021 --test app/rs/src/touch_slots.rs -o "$RUNNER_TEMP/touch-slot-tests"
+          timeout 20 "$RUNNER_TEMP/touch-slot-tests"
