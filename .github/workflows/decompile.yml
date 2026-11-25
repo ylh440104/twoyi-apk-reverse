@@ -35,8 +35,9 @@ jobs:
         run: |
           set -x
           sudo apt-get update -qq
-          sudo apt-get install -y -qq p7zip-full binutils file zip unzip rsync > /dev/null
+          sudo apt-get install -y -qq p7zip-full zstd binutils file zip unzip rsync > /dev/null
           7z | head -3
+          zstd --version
           mkdir -p "$RUNNER_TEMP/tools"
           curl -sSL -o "$RUNNER_TEMP/tools/jadx.zip" https://github.com/skylot/jadx/releases/download/v1.5.0/jadx-1.5.0.zip
           unzip -q -o "$RUNNER_TEMP/tools/jadx.zip" -d "$RUNNER_TEMP/tools/jadx"
@@ -152,52 +153,116 @@ jobs:
 
       - name: Inspect internal ROM (rootfs)
         run: |
-          set -uo pipefail
+          set -u
           APK="$RUNNER_TEMP/apk/twoyi.apk"
           mkdir -p "$RUNNER_TEMP/rootfs" report/rootfs
-          # any 7z blob in assets is the internal Android system
-          unzip -l "$APK" | awk '{print $4}' | grep -Ei '^assets/.*\.(7z|zip|xz|tar)$' > report/rootfs/blobs.txt || true
-          cat report/rootfs/blobs.txt
-          i=0
-          while read -r entry; do
+          unzip -l "$APK" | awk '{print $4}' | grep -Ei '^assets/.*\.(7z|zip|xz|tar|zst|tar\.zst|tar\.gz|tgz)$' | sort -u > report/rootfs/blobs.txt || true
+          echo "--- candidate ROM blobs ---"
+          cat report/rootfs/blobs.txt || true
+
+          extract_blob() {   # $1 = blob path
+            local blob="$1" name out
+            name=$(basename "$blob")
+            case "$name" in
+              *.tar.zst|*.tzst)
+                zstd -dc "$blob" 2>/dev/null | tar -tf - > "$RUNNER_TEMP/listing.full" 2>/dev/null || true
+                zstd -dc "$blob" 2>/dev/null | tar -tf - 2>/dev/null | wc -l > "$RUNNER_TEMP/listing.count" || echo 0 > "$RUNNER_TEMP/listing.count"
+                ;;
+              *)
+                7z l "$blob" > "$RUNNER_TEMP/listing.full" 2>/dev/null || true
+                wc -l < "$RUNNER_TEMP/listing.full" > "$RUNNER_TEMP/listing.count" 2>/dev/null || echo 0 > "$RUNNER_TEMP/listing.count"
+                ;;
+            esac
+            {
+              echo "# listing of $name"
+              echo
+              echo "total lines: $(cat "$RUNNER_TEMP/listing.count" 2>/dev/null || echo 0)"
+              echo
+              head -3000 "$RUNNER_TEMP/listing.full" 2>/dev/null || true
+            } > "report/rootfs/listing-$name.txt"
+            tail -30 "report/rootfs/listing-$name.txt" || true
+
+            # guest top-level layout -> compact summary we can read locally
+            awk '{print $NF}' "$RUNNER_TEMP/listing.full" 2>/dev/null \
+              | sed 's|^\./||' | awk -F/ 'NF>1{print $1"/"$2} NF==1{print $1}' \
+              | sort | uniq -c | sort -rn | head -60 > "report/rootfs/top-dirs-$name.txt" || true
+
+            # only tiny text metadata is extracted; never the whole system
+            mkdir -p "$RUNNER_TEMP/rootfs/meta"
+            case "$name" in
+              *.tar.zst|*.tzst)
+                zstd -dc "$blob" 2>/dev/null | tar -xf - -C "$RUNNER_TEMP/rootfs/meta" \
+                  --wildcards '*/rom.ini' '*/init' '*/init.rc' '*/init.environ.rc' \
+                  '*/prop.default' '*/default.prop' '*/build.prop' '*/system/build.prop' \
+                  '*/vendor/build.prop' '*/vendor/default.prop' '*/odm/etc/*' \
+                  '*/system/etc/init/*' '*/system/etc/ld.config*' '*/system/etc/vintf/*' \
+                  '*/system/etc/permissions/*' '*/system/etc/public.libraries*' \
+                  '*.rc' 2>/dev/null || true
+                zstd -dc "$blob" 2>/dev/null | tar -xf - -C "$RUNNER_TEMP/rootfs/meta" \
+                  --wildcards '*libEGL*' '*libGLES*' '*hw/*' '*libtwoyi*' '*libOpenglRender*' \
+                  '*libloader*' '*twoyi*' 2>/dev/null || true
+                ;;
+              *)
+                7z x -y -o"$RUNNER_TEMP/rootfs/meta" "$blob" \
+                  '*rom.ini' '*init' '*init.rc' '*init.environ.rc' \
+                  '*prop.default' '*default.prop' '*build.prop' '*libEGL*' '*libGLES*' \
+                  '*hw/*' '*twoyi*' '*libloader*' > /dev/null 2>&1 || true
+                ;;
+            esac
+          }
+
+          while IFS= read -r entry; do
             [ -n "$entry" ] || continue
-            i=$((i+1))
-            unzip -o -j "$APK" "$entry" -d "$RUNNER_TEMP/rootfs" > /dev/null 2>&1 || continue
+            echo "== $entry"
+            unzip -o -j "$APK" "$entry" -d "$RUNNER_TEMP/rootfs" > /dev/null 2>&1 || true
             blob="$RUNNER_TEMP/rootfs/$(basename "$entry")"
             [ -f "$blob" ] || continue
-            echo "== $(basename "$entry") $(stat -c%s "$blob") bytes"
-            L="report/rootfs/listing-$(basename "$entry").txt"
-            7z l "$blob" > "$RUNNER_TEMP/listing.full" 2>&1 || true
-            {
-              echo "# 7z listing of $(basename "$entry") (first 4000 lines; total $(wc -l < "$RUNNER_TEMP/listing.full") lines)"
-              echo
-              head -4000 "$RUNNER_TEMP/listing.full"
-            } > "$L"
-            head -30 "$L"
-            # count entries by top-level path
-            grep -E '^\S+ \S+ +[0-9]+' "report/rootfs/listing-$(basename "$entry").txt" 2>/dev/null | head -0 || true
-            # extract only tiny metadata / boot scripts, never the whole system
-            7z x -y -o"$RUNNER_TEMP/rootfs/meta" "$blob" \
-              'rootfs/rom.ini' 'rootfs/init' 'rootfs/init.rc' 'rootfs/init.environ.rc' \
-              'rootfs/default.prop' 'rootfs/vendor/default.prop' 'rootfs/system/build.prop' \
-              'rootfs/prop.default' 'rootfs/*.rc' > /dev/null 2>&1 || true
-            # extract the HAL / graphics stubs (small, they show the guest side of the protocol)
-            7z x -y -o"$RUNNER_TEMP/rootfs/meta" "$blob" \
-              'rootfs/system/lib64/libEGL*' 'rootfs/system/lib64/libGLES*' \
-              'rootfs/system/lib64/hw/*' 'rootfs/vendor/lib64/hw/*' \
-              'rootfs/system/lib64/libOpenglRender*' 'rootfs/system/lib64/liblog.so' > /dev/null 2>&1 || true
+            echo "   size: $(stat -c%s "$blob")"
+            extract_blob "$blob"
           done < report/rootfs/blobs.txt
-          find "$RUNNER_TEMP/rootfs/meta" -type f 2>/dev/null | head -50
-          # commit boot metadata text and strings of extracted stubs
+
+          echo "--- extracted metadata ---"
+          find "$RUNNER_TEMP/rootfs/meta" -type f 2>/dev/null | sed "s|$RUNNER_TEMP/rootfs/meta/||" | head -200 || true
+
+          # commit the extracted text files (rc / prop / ini), preserving paths
           if [ -d "$RUNNER_TEMP/rootfs/meta" ]; then
-            rsync -a --include='*/' --include='*.ini' --include='*.prop' --include='*.rc' --exclude='*' \
+            rsync -a \
+              --include='*/' \
+              --include='*.rc' --include='*.prop' --include='*.ini' \
+              --include='*.conf' --include='*.xml' --include='*.txt' \
+              --exclude='*' \
               "$RUNNER_TEMP/rootfs/meta/" report/rootfs/meta-text/ 2>/dev/null || true
             mkdir -p report/rootfs/stub-strings
-            find "$RUNNER_TEMP/rootfs/meta" -type f -name '*.so' | while read -r so; do
-              [ -f "$so" ] || continue
-              strings -a -n 5 "$so" | sort -u > "report/rootfs/stub-strings/$(basename "$so").txt" || true
+            find "$RUNNER_TEMP/rootfs/meta" -type f \( -name '*.so' -o -perm -u+x \) 2>/dev/null | head -60 | while IFS= read -r so; do
+              strings -a -n 6 "$so" 2>/dev/null | sort -u > "report/rootfs/stub-strings/$(basename "$so").txt" || true
             done
           fi
+          du -sh report/rootfs || true
+          exit 0
+
+      - name: Keyword index (cheap local reading)
+        run: |
+          set -u
+          mkdir -p report/keywords
+          PAT='TWOYI_SOCK|TYLOADER|loader64|rootfs\.tar|rootfs\.7z|libloader|libtwoyi|OpenglRender|opengles|dev/input|TaskCommander|getRelay|twoyiSocket|guest|HostDisplay|crossProfile|phantom|vmx|kvm|libsu|KernelSU|Magisk'
+          for f in report/native/strings-*.txt report/rootfs/stub-strings/*.txt; do
+            [ -f "$f" ] || continue
+            n=$(basename "$f")
+            grep -E "$PAT" "$f" 2>/dev/null | sort -u > "report/keywords/hits-$n" || true
+          done
+          {
+            echo "# Java/JSON-ish hits in decompiled sources"
+            echo
+            grep -rInE "$PAT" decompiled/sources 2>/dev/null | head -600 || true
+          } > report/keywords/hits-sources.txt
+          {
+            echo "# string resources of interest"
+            echo
+            grep -nE 'twoyi|rom|rootfs|guest|phantom|shizuku|kernelsu|xposed|magisk|adb|vpn|stat' \
+              report/apktool/res/values/strings.xml 2>/dev/null | head -300 || true
+          } > report/keywords/hits-strings-res.xml
+          wc -l report/keywords/* | tail -20 || true
+          exit 0
 
       - name: Commit results
         run: |
