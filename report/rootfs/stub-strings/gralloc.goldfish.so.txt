@@ -1,0 +1,111 @@
+%s: failed to map ashmem region: %d(%s)
+**** ERROR unknown type 0x%x (%s,%d)
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+/system/lib64/hw/gralloc.default.so
+Android
+Could not find software fallback module!?
+Emulator without host-side GPU emulation detected.
+Graphics Memory Allocator Module
+The Android Open Source Project
+_Z15getOpenCountPtrP11cb_handle_t
+_Z20getAshmemColorOffsetP11cb_handle_t
+_ZN14HostConnection3getEv
+_ZN14HostConnection9rcEncoderEv
+_ZdaPv
+_ZdlPv
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__errno
+__register_atfork
+__stack_chk_fail
+__strcat_chk
+__strncat_chk
+_edata
+ashmem_create_region
+dlclose
+dlopen
+eglCodecCommon
+getpid
+glSizeof
+glUtilsCalcShaderSourceLen
+glUtilsPackPointerData
+glUtilsPackStrings
+glUtilsParamSize
+glUtilsParamSize: unknow param 0x%08x
+glUtilsPixelBitSize
+glUtilsPixelBitSize: unknown pixel format...
+glUtilsPixelBitSize: unknown pixel type - assuming pixel data 0
+glUtilsWritePackPointerData
+gold 1.11
+gralloc
+gralloc-buffer
+gralloc.goldfish.so
+gralloc: Failed to get host connection
+gralloc: Failed to get renderControl encoder context
+gralloc: failed to get host connection while opening %s
+gralloc_alloc failed to create ashmem region: %s
+gralloc_alloc: Bad inputs (grdev: %p, pHandle: %p, pStride: %p
+gralloc_alloc: Requested YCbCr_420_888, but no known specific format for this usage: %d x %d, usage %x
+gralloc_alloc: Requested auto format selection, but no known format for this usage: %d x %d, usage %x
+gralloc_alloc: Unknown format %d
+gralloc_free: invalid handle
+gralloc_goldfish
+gralloc_lock bad handle
+gralloc_lock cacheFlush failed postCount=%d sw_read=%d
+gralloc_lock can't be used with YCbCr_420_888 format
+gralloc_lock usage mismatch usage=0x%x cb->usage=0x%x
+gralloc_lock_ycbcr bad handle
+gralloc_lock_ycbcr can only be used with HAL_PIXEL_FORMAT_YCbCr_420_888, got %x instead
+gralloc_lock_ycbcr got NULL ycbcr struct
+gralloc_lock_ycbcr unexpected internal format %x
+gralloc_lock_ycbcr usage mismatch usage:0x%x cb->usage:0x%x
+gralloc_register_buffer(%p): invalid buffer
+gralloc_register_buffer(%p): map failed: %s
+gralloc_unregister_buffer(%p): invalid buffer
+gralloc_unregister_buffer(%p): unmap failed
+libGLESv1_enc.so
+libGLESv2_enc.so
+libOpenglSystemCommon.so
+lib_renderControl_enc.so
+libc++.so
+libc.so
+libcutils.so
+libdl.so
+liblog.so
+libm.so
+libutils.so
+malloc
+map_buffer
+memcpy
+memset
+munmap
+oJ}	SJ
+property_get
+pthread_mutex_init
+pthread_mutex_lock
+pthread_mutex_unlock
+pthread_once
+ro.kernel.qemu.gles
+strcmp
+strerror
+strlen

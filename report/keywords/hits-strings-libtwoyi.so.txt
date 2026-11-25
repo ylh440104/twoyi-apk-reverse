@@ -1,0 +1,32 @@
+    enable guestRenderDoc: %s
+%s: Querying file size of guest trace...
+%s: Timed out when waiting for guest file to stabilize, skipping combined trace saving.
+%s: guest filename: %s
+%s: guest filename: %s (possibly set via $VPERFETTO_GUEST_FILE)
+%s: guest time diff to add to host time: %llu
+%s: skipping guest combined trace, either guest file name (%p) not specified or combined file name (%p) not specified
+%s: warning: backed off %zu times due to guest slowness.
+%s:%d Skipping queue transfer from guest to host for ColorBuffer(id = %d)
+%s:%d Skipping queue transfer from host to guest for ColorBuffer(id = %d)
+/data/data/io.twoyi/rootfs/dev/input/key0
+/data/data/io.twoyi/rootfs/dev/input/touch
+: submitting commands to issue acquire queue transfer from guest to host for ColorBuffer(
+: submitting commands to issue release queue transfer from host to guest for ColorBuffer(
+DmaMap: ERROR: %s: guest addr 0x%llx not alloced!
+DmaMap: ERROR: %s: guest paddr 0x%llx not alloced!
+Export allocs are to be handled on the guest side / VkCommonOperations.
+GPU emulation is in the guest
+KernelSU twoyi_hal request failed: %s
+guest
+guest attempted to change bound PUID
+guest-transfer-image-create-or-bind-failed
+libOpenglRender
+libtwoyi.so
+opengles
+opengles2
+opengles3
+puid=%lu context=%lu: channel rejected guest bytes result=%d state=%u
+puid=%lu context=%lu: guest socket reached EOF channel_state=%u
+puid=%lu context=%lu: guest socket read failed errno=%d channel_state=%u
+puid=%lu context=%lu: non-zero guest client flags
+wait for the guest Qsri VkFence signaled

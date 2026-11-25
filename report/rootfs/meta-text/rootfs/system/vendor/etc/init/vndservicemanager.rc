@@ -1,0 +1,7 @@
+service vndservicemanager /vendor/bin/vndservicemanager /dev/vndbinder
+    #class core
+    class svc
+    user system
+    group system readproc
+    writepid /dev/cpuset/system-background/tasks
+    shutdown critical

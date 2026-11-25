@@ -1,0 +1,194 @@
+  now using address %s for route %d
+ Non-NULL shut down sink when opening input stream, releasing, refcount=%d
+ Non-NULL sink when opening input stream, refcount=%d
+ route[%d] rate in=%d out=%d, addr=[%s]
+%s: key not found
+.data.rel.ro
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+Android
+AudioParameter
+Cannot create new route for address %s, max number of routes reached
+Error %d looking for address=%s in adev_open_input_stream
+Error %d looking for address=%s in adev_open_output_stream
+LIBC_N
+NULL sink when opening input stream, refcount=%d
+Output
+Reroute submix audio module:
+The Android Open Source Project
+Wifi Display audio HAL
+_ZN7android10VectorImpl13finish_vectorEv
+_ZN7android10VectorImpl5clearEv
+_ZN7android14AudioParameter10keyRoutingE
+_ZN7android14AudioParameter11keyChannelsE
+_ZN7android14AudioParameter11keyHwAvSyncE
+_ZN7android14AudioParameter13keyFrameCountE
+_ZN7android14AudioParameter13keyMonoOutputE
+_ZN7android14AudioParameter14keyInputSourceE
+_ZN7android14AudioParameter14keyScreenStateE
+_ZN7android14AudioParameter15keySamplingRateE
+_ZN7android14AudioParameter16keyStreamConnectE
+_ZN7android14AudioParameter17keyStreamHwAvSyncE
+_ZN7android14AudioParameter18valueListSeparatorE
+_ZN7android14AudioParameter19keyStreamDisconnectE
+_ZN7android14AudioParameter25keyStreamSupportedFormatsE
+_ZN7android14AudioParameter26keyStreamSupportedChannelsE
+_ZN7android14AudioParameter31keyStreamSupportedSamplingRatesE
+_ZN7android14AudioParameter3addERKNS_7String8ES3_
+_ZN7android14AudioParameter6addIntERKNS_7String8Ei
+_ZN7android14AudioParameter6addKeyERKNS_7String8E
+_ZN7android14AudioParameter6removeERKNS_7String8E
+_ZN7android14AudioParameter7valueOnE
+_ZN7android14AudioParameter8addFloatERKNS_7String8Ef
+_ZN7android14AudioParameter8valueOffE
+_ZN7android14AudioParameter9keyBtNrecE
+_ZN7android14AudioParameter9keyFormatE
+_ZN7android14AudioParameterC1ERKNS_7String8E
+_ZN7android14AudioParameterC2ERKNS_7String8E
+_ZN7android14AudioParameterD0Ev
+_ZN7android14AudioParameterD1Ev
+_ZN7android14AudioParameterD2Ev
+_ZN7android14MonoPipeReaderC1EPNS_8MonoPipeE
+_ZN7android14sp_report_raceEv
+_ZN7android16Format_from_SR_CEjj14audio_format_t
+_ZN7android16SortedVectorImpl3addEPKv
+_ZN7android16SortedVectorImpl6removeEPKv
+_ZN7android16SortedVectorImplC2Emj
+_ZN7android16SortedVectorImplD2Ev
+_ZN7android7String85setToERKS0_
+_ZN7android7String86appendEPKc
+_ZN7android7String86appendERKS0_
+_ZN7android7String8C1EPKc
+_ZN7android7String8C1EPKcm
+_ZN7android7String8C1ERKS0_
+_ZN7android7String8C1Ev
+_ZN7android7String8D1Ev
+_ZN7android8MonoPipe10isShutdownEv
+_ZN7android8MonoPipe8shutdownEb
+_ZN7android8MonoPipeC1EmRKNS_12NBAIO_FormatEb
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE10do_compareEPKvS6_
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE10do_destroyEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE12do_constructEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE15do_move_forwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE16do_move_backwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE7do_copyEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEE8do_splatEPvPKvm
+_ZNK7android14AudioParameter12toStringImplEb
+_ZNK7android14AudioParameter3getERKNS_7String8ERS1_
+_ZNK7android14AudioParameter5getAtEmRNS_7String8E
+_ZNK7android14AudioParameter5getAtEmRNS_7String8ES2_
+_ZNK7android14AudioParameter6getIntERKNS_7String8ERi
+_ZNK7android14AudioParameter8getFloatERKNS_7String8ERf
+_ZNK7android16SortedVectorImpl7indexOfEPKv
+_ZNK7android7RefBase9decStrongEPKv
+_ZNK7android7RefBase9incStrongEPKv
+_ZNK7android7String86lengthEv
+_ZTVN7android12SortedVectorINS_16key_value_pair_tINS_7String8ES2_EEEE
+_ZTVN7android14AudioParameterE
+_ZdaPv
+_ZdlPv
+__android_log_assert
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__register_atfork
+__stack_chk_fail
+__vsnprintf_chk
+__vsprintf_chk
+__write_chk
+_edata
+adev_close()
+adev_close_input_stream()
+adev_close_output_stream() addr = %s
+adev_init_check()
+adev_open(name=%s)
+adev_open_input_stream(): Unable to open input stream.
+adev_open_input_stream(addr=%s)
+adev_open_output_stream(): Unable to open output stream for address %s
+adev_open_output_stream(address=%s)
+audio.r_submix.default.so
+audio_config_compare() format mismatch %x vs. %x
+audio_config_compare() sample rate mismatch %ul vs. %ul
+audio_hw_if
+bt_headset_nrec
+calloc
+channels
+clock_gettime
+connect
+const VALUE &android::KeyedVector<android::String8, android::String8>::valueFor(const KEY &) const [KEY = android::String8, VALUE = android::String8]
+disconnect
+exiting
+format
+frame_count
+gold 1.11
+hw_av_sync
+in_set_format(format=%x) format unsupported
+in_set_sample_rate() resampling enabled can't change sample rate from %u to %u
+in_set_sample_rate(rate=%u) rate unsupported
+in_standby()
+input_source
+libc++.so
+libc.so
+libcutils.so
+libdl.so
+liblog.so
+libm.so
+libnbaio_mono.so
+libutils.so
+memcpy
+memmove
+memset
+mono_output
+no audio pipe yet we're trying to read! (not all errors will be logged)
+out_set_format(format=%x) format unsupported
+out_set_parameters(): shutting down MonoPipe sink
+out_set_sample_rate() resampling enabled can't change sample rate from %u to %u for addr %s
+out_set_sample_rate(rate=%u) rate unsupported
+out_standby()
+out_write without a pipe!
+out_write() failed writing to pipe with %zd
+out_write() write to pipe returned NEGOTIATE
+out_write() write to pipe returned unexpected %zd
+pthread_mutex_lock
+pthread_mutex_unlock
+r_submix
+routing
+sampling_rate
+screen_state
+sscanf
+strcmp
+strcpy
+strcspn
+strdup
+strlen
+strncmp
+strncpy
+strtok_r
+submix_audio_device_create_pipe_l(addr=%s, idx=%d)
+submix_audio_device_destroy_pipe_l(): pipe destroyed
+submix_audio_device_release_pipe_l(idx=%d) addr=%s
+submix_open_validate_l(): %s stream already open.
+submix_open_validate_l(): Unsupported format.
+sup_channels
+sup_formats
+sup_sampling_rates
+usleep
+vQ>R:h

@@ -1,0 +1,56 @@
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+:sensors
+Android
+LIBC_N
+Twoyi Sensors HAL
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__errno
+__read_chk
+__register_atfork
+__stack_chk_fail
+__write_chk
+_edata
+clock_gettime
+could not fetch sensor list from host
+gold 1.11
+host provides %d sensors
+host reports %u sensors, clamping to %d
+host sensors server unreachable, exposing zero sensors
+libc++.so
+libc.so
+libcutils.so
+libdl.so
+libhardware.so
+liblog.so
+libm.so
+memset
+pthread_mutex_init
+pthread_mutex_lock
+pthread_mutex_unlock
+sensors.goldfish.so
+sensors_twoyi
+socket_local_client
+strcmp
+twoyi_hal
+usleep

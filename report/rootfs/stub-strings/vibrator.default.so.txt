@@ -1,0 +1,54 @@
+(M7=7^)
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+/sys/class/leds/vibrator
+/sys/class/timed_output/vibrator/enable
+8 2:ih
+Android
+Can not allocate memory for the vibrator device
+D&$vRr
+Default vibrator HAL
+The Android Open Source Project
+Vibrator device does not exist. Cannot start vibrator
+Vibrator using LED trigger
+Vibrator using timed_output
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__errno
+__open_2
+__register_atfork
+__stack_chk_fail
+__vsnprintf_chk
+_edata
+activate
+calloc
+duration
+gold 1.11
+libc++.so
+libc.so
+libdl.so
+liblog.so
+libm.so
+strlen
+s~]OS|
+vibrator
+vibrator.default.so

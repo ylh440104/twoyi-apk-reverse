@@ -1,0 +1,88 @@
+%_BC9,
+.data.rel.ro
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+/dev/fb%u
+/dev/graphics/fb%u
+Android
+Could not mmap %s
+Could not unmap %s
+Error mapping the framebuffer (%s)
+FBIOPUT_VSCREENINFO failed
+FBIOPUT_VSCREENINFO failed, page flipping not supported
+Graphics Memory Allocator Module
+Registering a buffer in the process that created it. This may cause memory ordering problems.
+ThR@9(
+The Android Open Source Project
+_Z12gralloc_lockPK16gralloc_module_tPK13native_handleiiiiiPPv
+_Z14fb_device_openPK11hw_module_tPKcPP11hw_device_t
+_Z14gralloc_unlockPK16gralloc_module_tPK13native_handle
+_Z15terminateBufferPK16gralloc_module_tP16private_handle_t
+_Z20mapFrameBufferLockedP16private_module_t
+_Z23gralloc_register_bufferPK16gralloc_module_tPK13native_handle
+_Z25gralloc_unregister_bufferPK16gralloc_module_tPK13native_handle
+_Z9mapBufferPK16gralloc_module_tP16private_handle_t
+_ZdlPv
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__errno
+__register_atfork
+__stack_chk_fail
+__vsnprintf_chk
+_edata
+ashmem_create_region
+b            = %2u:%u
+bpp          = %d
+couldn't create ashmem (%s)
+g            = %2u:%u
+getpid
+gold 1.11
+gralloc
+gralloc failed err=%s
+gralloc-buffer
+gralloc.default.so
+height       = %d mm (%f dpi)
+id           = %s
+invalid gralloc handle (at %p)
+libc++.so
+libc.so
+libcutils.so
+libdl.so
+liblog.so
+libm.so
+malloc
+memcpy
+memset
+munmap
+page flipping not supported (yres_virtual=%d, requested=%d)
+pthread_mutex_lock
+pthread_mutex_unlock
+r            = %2u:%u
+refresh rate = %.2f Hz
+strcmp
+strerror
+using (fd=%d)
+width        = %d mm (%f dpi)
+xres         = %d px
+xres_virtual = %d px
+yres         = %d px
+yres_virtual = %d px

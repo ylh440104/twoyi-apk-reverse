@@ -1,0 +1,73 @@
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    class core
+    disabled
+    mkdir /data/adb 0700 root root
+    mkdir /data/misc/adb 02750 system shell
+    seclabel u:r:adbd:s0
+    setprop sys.usb.config ${persist.sys.usb.config}
+    setprop sys.usb.configfs 0
+    setprop sys.usb.state ${sys.usb.config}
+    setprop sys.usb.typec.state ${sys.usb.typec.data_role}
+    setprop sys.usb.typec.state ${sys.usb.typec.mode}
+    setprop sys.usb.typec.state ${sys.usb.typec.power_role}
+    socket adbd stream 660 system system
+    start adbd
+    write /sys/class/android_usb/android0/bDeviceClass 0
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/enable 1
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/idProduct 2d00
+    write /sys/class/android_usb/android0/idProduct 2d01
+    write /sys/class/android_usb/android0/idProduct 2d02
+    write /sys/class/android_usb/android0/idProduct 2d03
+    write /sys/class/android_usb/android0/idProduct 2d04
+    write /sys/class/android_usb/android0/idProduct 2d05
+    write /sys/class/android_usb/android0/idProduct 4EE7
+    write /sys/class/android_usb/android0/idVendor 18d1
+    write /sys/class/dual_role_usb/otg_default/data_role ${sys.usb.typec.data_role}
+    write /sys/class/dual_role_usb/otg_default/mode ${sys.usb.typec.mode}
+    write /sys/class/dual_role_usb/otg_default/power_role ${sys.usb.typec.power_role}
+# Copyright (C) 2012 The Android Open Source Project
+# This is the fallback configuration if the
+# Twoyi: adbd serves TCP only and the guest has no USB, so USB state never
+# USB accessory configuration
+# USB accessory configuration, with adb
+# USB and audio accessory configuration
+# USB and audio accessory configuration, with adb
+# USB configuration common for all android devices
+# USB data role changes
+# USB manager fails to set a standard configuration
+# USB mode changes
+# USB power role changes
+# USB type C
+# Used to disable USB when switching states
+# Used to set USB configuration at boot and to switch the configuration
+# adb only USB configuration
+# adbd is controlled via property triggers in init.<platform>.usb.rc
+# adbd on at boot in emulator
+# audio accessory configuration
+# audio accessory configuration, with adb
+# stops it (persist.sys.usb.config is "none" on every boot).
+# when changing the default configuration
+on boot
+on boot && property:persist.sys.usb.config=*
+on post-fs-data
+on property:ro.kernel.qemu=1
+on property:sys.usb.config=accessory && property:sys.usb.configfs=0
+on property:sys.usb.config=accessory,adb && property:sys.usb.configfs=0
+on property:sys.usb.config=accessory,audio_source && property:sys.usb.configfs=0
+on property:sys.usb.config=accessory,audio_source,adb && property:sys.usb.configfs=0
+on property:sys.usb.config=adb && property:sys.usb.configfs=0
+on property:sys.usb.config=audio_source && property:sys.usb.configfs=0
+on property:sys.usb.config=audio_source,adb && property:sys.usb.configfs=0
+on property:sys.usb.config=none && property:sys.usb.configfs=0
+on property:sys.usb.typec.data_role=device
+on property:sys.usb.typec.data_role=host
+on property:sys.usb.typec.mode=dfp
+on property:sys.usb.typec.mode=ufp
+on property:sys.usb.typec.power_role=sink
+on property:sys.usb.typec.power_role=source
+service adbd /system/bin/adbd --root_seclabel=u:r:su:s0

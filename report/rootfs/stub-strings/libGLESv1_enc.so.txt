@@ -1,0 +1,649 @@
+#(aND(aN
+#aEb6#
+%s:%s:%d FUCK GL error 0x%x
+%s:%s:%d GL error %#x
+**** ERROR unknown type 0x%x (%s,%d)
+*r/jzm
+.data.rel.ro
+.dynamic
+.dynstr
+.dynsym
+.eh_frame
+.eh_frame_hdr
+.fini_array
+.gnu.hash
+.gnu.version
+.gnu.version_d
+.gnu.version_r
+.gnu_debugdata
+.got.plt
+.note.android.ident
+.note.gnu.build-id
+.note.gnu.gold-version
+.rela.dyn
+.rela.plt
+.rodata
+.shstrtab
+:0yC2.4
+<p$@+CE
+?|_,Qn)
+ANDROID_EMU_CHECKSUM_HELPER_v
+ANDROID_EMU_CHECKSUM_HELPER_v1
+Alloc (%u bytes) failed
+Android
+Android HW-GLES 1.0
+C(aN$(aN
+Failed to flush in alloc
+Function is unsupported
+GL_OES_EGL_image_external 
+OM!tOp
+OMrK'Z
+OpenGL ES-CM 1.0
+S3zY&t
+]>h"m!
+_ZN10BufferDataC1ElPv
+_ZN10BufferDataC1Ev
+_ZN10BufferDataC2ElPv
+_ZN10BufferDataC2Ev
+_ZN10glesv1_enc13pixelDataSizeEPviijji
+_ZN11ProgramData12attachShaderEj
+_ZN11ProgramData12detachShaderEj
+_ZN11ProgramData12setIndexInfoEjiij
+_ZN11ProgramData13isInitializedEv
+_ZN11ProgramData13setIndexFlagsEjj
+_ZN11ProgramData15initProgramDataEj
+_ZN11ProgramData17setSamplerUniformEiiPj
+_ZN11ProgramData18getTypeForLocationEi
+_ZN11ProgramData19getIndexForLocationEi
+_ZN11ProgramData20locationWARAppToHostEi
+_ZN11ProgramData20locationWARHostToAppEii
+_ZN11ProgramData21getNextSamplerUniformEiPiPj
+_ZN11ProgramData21setupLocationShiftWAREv
+_ZN11ProgramDataC1Ev
+_ZN11ProgramDataC2Ev
+_ZN11ProgramDataD0Ev
+_ZN11ProgramDataD1Ev
+_ZN11ProgramDataD2Ev
+_ZN13GLClientState11bindTextureEjjPh
+_ZN13GLClientState11getLocationEj
+_ZN13GLClientState12compareTexIdEPKvS1_
+_ZN13GLClientState13addTextureRecEjj
+_ZN13GLClientState13setPixelStoreEji
+_ZN13GLClientState14deleteTexturesEiPKj
+_ZN13GLClientState15setBufferObjectEij
+_ZN13GLClientState19enableTextureTargetEj
+_ZN13GLClientState20disableTextureTargetEj
+_ZN13GLClientState20setActiveTextureUnitEj
+_ZN13GLClientState21getClientStatePointerEjPPv
+_ZN13GLClientState22getStateAndEnableDirtyEiPb
+_ZN13GLClientState6enableEii
+_ZN13GLClientState8getStateEi
+_ZN13GLClientState8setStateEiijhiPKv
+_ZN13GLClientStateC1Ei
+_ZN13GLClientStateC2Ei
+_ZN13GLClientStateD1Ev
+_ZN13GLClientStateD2Ev
+_ZN13GLSharedGroup12attachShaderEjj
+_ZN13GLSharedGroup12detachShaderEjj
+_ZN13GLSharedGroup13addBufferDataEjlPv
+_ZN13GLSharedGroup13addShaderDataEj
+_ZN13GLSharedGroup13getBufferDataEj
+_ZN13GLSharedGroup13getShaderDataEj
+_ZN13GLSharedGroup14addProgramDataEj
+_ZN13GLSharedGroup15initProgramDataEjj
+_ZN13GLSharedGroup15unrefShaderDataEj
+_ZN13GLSharedGroup16deleteBufferDataEj
+_ZN13GLSharedGroup16updateBufferDataEjlPv
+_ZN13GLSharedGroup17deleteProgramDataEj
+_ZN13GLSharedGroup17setSamplerUniformEjiiPj
+_ZN13GLSharedGroup19refShaderDataLockedEl
+_ZN13GLSharedGroup19setProgramIndexInfoEjjiijPKc
+_ZN13GLSharedGroup19subUpdateBufferDataEjllPv
+_ZN13GLSharedGroup20isProgramInitializedEj
+_ZN13GLSharedGroup20locationWARAppToHostEji
+_ZN13GLSharedGroup20locationWARHostToAppEjii
+_ZN13GLSharedGroup21getProgramUniformTypeEji
+_ZN13GLSharedGroup21setupLocationShiftWAREj
+_ZN13GLSharedGroup21unrefShaderDataLockedEl
+_ZN13GLSharedGroup22needUniformLocationWAREj
+_ZN13GLSharedGroup8isObjectEj
+_ZN13GLSharedGroup9isProgramEj
+_ZN13GLSharedGroupC1Ev
+_ZN13GLSharedGroupC2Ev
+_ZN13GLSharedGroupD1Ev
+_ZN13GLSharedGroupD2Ev
+_ZN18ChecksumCalculator10setVersionEj
+_ZN18ChecksumCalculator13getMaxVersionEv
+_ZN18ChecksumCalculator13resetChecksumEv
+_ZN18ChecksumCalculator13writeChecksumEPvm
+_ZN18ChecksumCalculator16getMaxVersionStrEv
+_ZN18ChecksumCalculator17computeV1ChecksumEv
+_ZN18ChecksumCalculator22getMaxVersionStrPrefixEv
+_ZN18ChecksumCalculator8validateEPKvm
+_ZN18ChecksumCalculator9addBufferEPKvm
+_ZN19gl_client_context_t18initDispatchByNameEPFPvPKcS0_ES0_
+_ZN19gl_client_context_t18setContextAccessorEPFPS_vE
+_ZN20gl_encoder_context_tC1EP8IOStreamP18ChecksumCalculator
+_ZN20gl_encoder_context_tC2EP8IOStreamP18ChecksumCalculator
+_ZN7android10VectorImpl13finish_vectorEv
+_ZN7android10VectorImpl13removeItemsAtEmm
+_ZN7android10VectorImpl16editItemLocationEm
+_ZN7android10VectorImpl5clearEv
+_ZN7android10VectorImpl8insertAtEPKvmm
+_ZN7android10VectorImplC2Emj
+_ZN7android10VectorImplD2Ev
+_ZN7android16SortedVectorImpl3addEPKv
+_ZN7android16SortedVectorImpl6removeEPKv
+_ZN7android16SortedVectorImplC2Emj
+_ZN7android16SortedVectorImplD2Ev
+_ZN7android7String8D1Ev
+_ZN9GLEncoder10s_glEnableEPvj
+_ZN9GLEncoder10s_glFinishEPv
+_ZN9GLEncoder11s_glDisableEPvj
+_ZN9GLEncoder12s_glGetErrorEPv
+_ZN9GLEncoder13pixelDataSizeEiijji
+_ZN9GLEncoder13s_glGetFixedvEPvjPi
+_ZN9GLEncoder13s_glGetFloatvEPvjPf
+_ZN9GLEncoder13s_glGetStringEPvj
+_ZN9GLEncoder13s_glIsEnabledEPvj
+_ZN9GLEncoder14s_glBindBufferEPvjj
+_ZN9GLEncoder14s_glBufferDataEPvjlPKvj
+_ZN9GLEncoder14s_glDrawArraysEPvjii
+_ZN9GLEncoder14sendVertexDataEjj
+_ZN9GLEncoder15s_glBindTextureEPvjj
+_ZN9GLEncoder15s_glGetBooleanvEPvjPh
+_ZN9GLEncoder15s_glGetIntegervEPvjPi
+_ZN9GLEncoder15s_glGetPointervEPvjPS0_
+_ZN9GLEncoder15s_glPixelStoreiEPvji
+_ZN9GLEncoder16s_glColorPointerEPvijiPKv
+_ZN9GLEncoder16s_glDrawElementsEPvjijPKv
+_ZN9GLEncoder17s_glActiveTextureEPvj
+_ZN9GLEncoder17s_glBufferSubDataEPvjllPKv
+_ZN9GLEncoder17s_glDeleteBuffersEPviPKj
+_ZN9GLEncoder17s_glNormalPointerEPvjiPKv
+_ZN9GLEncoder17s_glTexParameterfEPvjjf
+_ZN9GLEncoder17s_glTexParameteriEPvjji
+_ZN9GLEncoder17s_glTexParameterxEPvjji
+_ZN9GLEncoder17s_glTexSubImage2DEPvjiiiiijjPKv
+_ZN9GLEncoder17s_glVertexPointerEPvijiPKv
+_ZN9GLEncoder18s_glDeleteTexturesEPviPKj
+_ZN9GLEncoder18s_glTexParameterfvEPvjjPKf
+_ZN9GLEncoder18s_glTexParameterivEPvjjPKi
+_ZN9GLEncoder18s_glTexParameterxvEPvjjPKi
+_ZN9GLEncoder19s_glTexCoordPointerEPvijiPKv
+_ZN9GLEncoder20s_glWeightPointerOESEPvijiPKv
+_ZN9GLEncoder21s_glEnableClientStateEPvj
+_ZN9GLEncoder21s_glGetTexParameterfvEPvjjPf
+_ZN9GLEncoder21s_glGetTexParameterivEPvjjPi
+_ZN9GLEncoder21s_glGetTexParameterxvEPvjjPi
+_ZN9GLEncoder22restore2DTextureTargetEv
+_ZN9GLEncoder22s_glDisableClientStateEPvj
+_ZN9GLEncoder23override2DTextureTargetEj
+_ZN9GLEncoder23s_glClientActiveTextureEPvj
+_ZN9GLEncoder23s_glPointSizePointerOESEPvjiPKv
+_ZN9GLEncoder25s_glMatrixIndexPointerOESEPvijiPKv
+_ZN9GLEncoder27getCompressedTextureFormatsEv
+_ZN9GLEncoder9s_glFlushEPv
+_ZN9GLEncoderC1EP8IOStreamP18ChecksumCalculator
+_ZN9GLEncoderC2EP8IOStreamP18ChecksumCalculator
+_ZN9GLEncoderD0Ev
+_ZN9GLEncoderD1Ev
+_ZN9GLEncoderD2Ev
+_ZNK13GLClientState13pixelDataSizeEiijji
+_ZNK13GLClientState15getBoundTextureEj
+_ZNK13GLClientState20getActiveTextureUnitEv
+_ZNK13GLClientState24getPriorityEnabledTargetEj
+_ZNK13GLSharedGroup21getNextSamplerUniformEjiPiPj
+_ZNK18ChecksumCalculator16checksumByteSizeEv
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE10do_compareEPKvS7_
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE10do_destroyEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE12do_constructEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE15do_move_forwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE16do_move_backwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE7do_copyEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEE8do_splatEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE10do_compareEPKvS7_
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE10do_destroyEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE12do_constructEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE15do_move_forwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE16do_move_backwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE7do_copyEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEE8do_splatEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE10do_compareEPKvS7_
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE10do_destroyEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE12do_constructEPvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE15do_move_forwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE16do_move_backwardEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE7do_copyEPvPKvm
+_ZNK7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEE8do_splatEPvPKvm
+_ZNK7android16SortedVectorImpl7indexOfEPKv
+_ZNK7android6VectorIjE10do_destroyEPvm
+_ZNK7android6VectorIjE12do_constructEPvm
+_ZNK7android6VectorIjE15do_move_forwardEPvPKvm
+_ZNK7android6VectorIjE16do_move_backwardEPvPKvm
+_ZNK7android6VectorIjE7do_copyEPvPKvm
+_ZNK7android6VectorIjE8do_splatEPvPKvm
+_ZTV11ProgramData
+_ZTV20gl_encoder_context_t
+_ZTV9GLEncoder
+_ZTVN7android12SortedVectorINS_16key_value_pair_tIjP10BufferDataEEEE
+_ZTVN7android12SortedVectorINS_16key_value_pair_tIjP10ShaderDataEEEE
+_ZTVN7android12SortedVectorINS_16key_value_pair_tIjP11ProgramDataEEEE
+_ZTVN7android4ListINS_7String8EEE
+_ZTVN7android6VectorIjEE
+_ZdaPv
+_ZdlPv
+__android_log_print
+__bss_start
+__cxa_atexit
+__cxa_finalize
+__register_atfork
+__stack_chk_fail
+__strcat_chk
+__strncat_chk
+_edata
+bsearch
+eglCodecCommon
+emuglGLESv1_enc
+glActiveTexture
+glAlphaFunc
+glAlphaFuncx
+glAlphaFuncxOES
+glBindBuffer
+glBindFramebufferOES
+glBindRenderbufferOES
+glBindTexture
+glBindVertexArrayOES
+glBlendEquationOES
+glBlendEquationSeparateOES
+glBlendFunc
+glBlendFuncSeparateOES
+glBufferData
+glBufferSubData
+glCheckFramebufferStatusOES
+glCheckFramebufferStatusOES: GL communication error, please report this issue to b.android.com.
+glClear
+glClearColor
+glClearColorx
+glClearColorxOES
+glClearDepthf
+glClearDepthfOES
+glClearDepthx
+glClearDepthxOES
+glClearStencil
+glClientActiveTexture
+glClipPlanef
+glClipPlanefIMG
+glClipPlanefOES
+glClipPlanex
+glClipPlanexIMG
+glClipPlanexOES
+glColor4f
+glColor4ub
+glColor4x
+glColor4xOES
+glColorMask
+glColorPointer
+glColorPointerData
+glColorPointerOffset
+glCompressedTexImage2D
+glCompressedTexSubImage2D
+glCopyTexImage2D
+glCopyTexSubImage2D
+glCullFace
+glCurrentPaletteMatrixOES
+glDeleteBuffers
+glDeleteFencesNV
+glDeleteFramebuffersOES
+glDeleteRenderbuffersOES
+glDeleteTextures
+glDeleteVertexArraysOES
+glDepthFunc
+glDepthMask
+glDepthRangef
+glDepthRangefOES
+glDepthRangex
+glDepthRangexOES
+glDisable
+glDisableClientState
+glDisableDriverControlQCOM
+glDiscardFramebufferEXT
+glDrawArrays
+glDrawArrays: a vertex attribute array is enabled with no data bound
+glDrawArrays: no data bound to the command - ignoring
+glDrawElements
+glDrawElements: a vertex attribute array is enabled with no data bound
+glDrawElements: no data bound to the command - ignoring
+glDrawElementsData
+glDrawElementsOffset
+glDrawTexfOES
+glDrawTexfvOES
+glDrawTexiOES
+glDrawTexivOES
+glDrawTexsOES
+glDrawTexsvOES
+glDrawTexxOES
+glDrawTexxvOES
+glEGLImageTargetRenderbufferStorageOES
+glEGLImageTargetTexture2DOES
+glEnable
+glEnableClientState
+glEnableDriverControlQCOM
+glEndTilingQCOM
+glExtGetBufferPointervQCOM
+glExtGetBuffersQCOM
+glExtGetBuffersQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetFramebuffersQCOM
+glExtGetFramebuffersQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetProgramBinarySourceQCOM
+glExtGetProgramsQCOM
+glExtGetProgramsQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetRenderbuffersQCOM
+glExtGetRenderbuffersQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetShadersQCOM
+glExtGetShadersQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetTexLevelParameterivQCOM
+glExtGetTexLevelParameterivQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetTexSubImageQCOM
+glExtGetTexSubImageQCOM: GL communication error, please report this issue to b.android.com.
+glExtGetTexturesQCOM
+glExtGetTexturesQCOM: GL communication error, please report this issue to b.android.com.
+glExtIsProgramBinaryQCOM
+glExtIsProgramBinaryQCOM: GL communication error, please report this issue to b.android.com.
+glExtTexObjectStateOverrideiQCOM
+glFinish
+glFinishFenceNV
+glFinishRoundTrip
+glFinishRoundTrip: GL communication error, please report this issue to b.android.com.
+glFlush
+glFogf
+glFogfv
+glFogx
+glFogxOES
+glFogxv
+glFogxvOES
+glFramebufferRenderbufferOES
+glFramebufferTexture2DMultisampleIMG
+glFramebufferTexture2DOES
+glFrontFace
+glFrustumf
+glFrustumfOES
+glFrustumx
+glFrustumxOES
+glGenBuffers
+glGenBuffers: GL communication error, please report this issue to b.android.com.
+glGenFencesNV
+glGenFramebuffersOES
+glGenFramebuffersOES: GL communication error, please report this issue to b.android.com.
+glGenRenderbuffersOES
+glGenRenderbuffersOES: GL communication error, please report this issue to b.android.com.
+glGenTextures
+glGenTextures: GL communication error, please report this issue to b.android.com.
+glGenVertexArraysOES
+glGenVertexArraysOES: GL communication error, please report this issue to b.android.com.
+glGenerateMipmapOES
+glGetBooleanv
+glGetBooleanv: GL communication error, please report this issue to b.android.com.
+glGetBufferParameteriv
+glGetBufferParameteriv: GL communication error, please report this issue to b.android.com.
+glGetBufferPointervOES
+glGetClipPlanef
+glGetClipPlanef: GL communication error, please report this issue to b.android.com.
+glGetClipPlanefOES
+glGetClipPlanefOES: GL communication error, please report this issue to b.android.com.
+glGetClipPlanex
+glGetClipPlanex: GL communication error, please report this issue to b.android.com.
+glGetClipPlanexOES
+glGetClipPlanexOES: GL communication error, please report this issue to b.android.com.
+glGetCompressedTextureFormats
+glGetCompressedTextureFormats: GL communication error, please report this issue to b.android.com.
+glGetDriverControlStringQCOM
+glGetDriverControlStringQCOM: GL communication error, please report this issue to b.android.com.
+glGetDriverControlsQCOM
+glGetDriverControlsQCOM: GL communication error, please report this issue to b.android.com.
+glGetError
+glGetError: GL communication error, please report this issue to b.android.com.
+glGetFenceivNV
+glGetFenceivNV: GL communication error, please report this issue to b.android.com.
+glGetFixedv
+glGetFixedv: GL communication error, please report this issue to b.android.com.
+glGetFixedvOES
+glGetFixedvOES: GL communication error, please report this issue to b.android.com.
+glGetFloatv
+glGetFloatv: GL communication error, please report this issue to b.android.com.
+glGetFramebufferAttachmentParameterivOES
+glGetFramebufferAttachmentParameterivOES: GL communication error, please report this issue to b.android.com.
+glGetIntegerv
+glGetIntegerv: GL communication error, please report this issue to b.android.com.
+glGetLightfv
+glGetLightfv: GL communication error, please report this issue to b.android.com.
+glGetLightxv
+glGetLightxv: GL communication error, please report this issue to b.android.com.
+glGetLightxvOES
+glGetLightxvOES: GL communication error, please report this issue to b.android.com.
+glGetMaterialfv
+glGetMaterialfv: GL communication error, please report this issue to b.android.com.
+glGetMaterialxv
+glGetMaterialxv: GL communication error, please report this issue to b.android.com.
+glGetMaterialxvOES
+glGetMaterialxvOES: GL communication error, please report this issue to b.android.com.
+glGetPointerv
+glGetRenderbufferParameterivOES
+glGetRenderbufferParameterivOES: GL communication error, please report this issue to b.android.com.
+glGetString
+glGetTexEnvfv
+glGetTexEnvfv: GL communication error, please report this issue to b.android.com.
+glGetTexEnviv
+glGetTexEnviv: GL communication error, please report this issue to b.android.com.
+glGetTexEnvxv
+glGetTexEnvxv: GL communication error, please report this issue to b.android.com.
+glGetTexEnvxvOES
+glGetTexEnvxvOES: GL communication error, please report this issue to b.android.com.
+glGetTexGenfvOES
+glGetTexGenivOES
+glGetTexGenxvOES
+glGetTexParameterfv
+glGetTexParameterfv: GL communication error, please report this issue to b.android.com.
+glGetTexParameteriv
+glGetTexParameteriv: GL communication error, please report this issue to b.android.com.
+glGetTexParameterxv
+glGetTexParameterxv: GL communication error, please report this issue to b.android.com.
+glGetTexParameterxvOES
+glGetTexParameterxvOES: GL communication error, please report this issue to b.android.com.
+glHint
+glIsBuffer
+glIsBuffer: GL communication error, please report this issue to b.android.com.
+glIsEnabled
+glIsEnabled: GL communication error, please report this issue to b.android.com.
+glIsFenceNV
+glIsFenceNV: GL communication error, please report this issue to b.android.com.
+glIsFramebufferOES
+glIsFramebufferOES: GL communication error, please report this issue to b.android.com.
+glIsRenderbufferOES
+glIsRenderbufferOES: GL communication error, please report this issue to b.android.com.
+glIsTexture
+glIsTexture: GL communication error, please report this issue to b.android.com.
+glIsVertexArrayOES
+glIsVertexArrayOES: GL communication error, please report this issue to b.android.com.
+glLightModelf
+glLightModelfv
+glLightModelx
+glLightModelxOES
+glLightModelxv
+glLightModelxvOES
+glLightf
+glLightfv
+glLightx
+glLightxOES
+glLightxv
+glLightxvOES
+glLineWidth
+glLineWidthx
+glLineWidthxOES
+glLoadIdentity
+glLoadMatrixf
+glLoadMatrixx
+glLoadMatrixxOES
+glLoadPaletteFromModelViewMatrixOES
+glLogicOp
+glMapBufferOES
+glMaterialf
+glMaterialfv
+glMaterialx
+glMaterialxOES
+glMaterialxv
+glMaterialxvOES
+glMatrixIndexPointerData
+glMatrixIndexPointerOES
+glMatrixIndexPointerOffset
+glMatrixMode
+glMultMatrixf
+glMultMatrixx
+glMultMatrixxOES
+glMultiDrawArraysEXT
+glMultiDrawArraysSUN
+glMultiDrawElementsEXT
+glMultiDrawElementsSUN
+glMultiTexCoord4f
+glMultiTexCoord4x
+glMultiTexCoord4xOES
+glNormal3f
+glNormal3x
+glNormal3xOES
+glNormalPointer
+glNormalPointerData
+glNormalPointerOffset
+glOrthof
+glOrthofOES
+glOrthox
+glOrthoxOES
+glPixelStorei
+glPointParameterf
+glPointParameterfv
+glPointParameterx
+glPointParameterxOES
+glPointParameterxv
+glPointParameterxvOES
+glPointSize
+glPointSizePointerData
+glPointSizePointerOES
+glPointSizePointerOffset
+glPointSizex
+glPointSizexOES
+glPolygonOffset
+glPolygonOffsetx
+glPolygonOffsetxOES
+glPopMatrix
+glPushMatrix
+glQueryMatrixxOES
+glQueryMatrixxOES: GL communication error, please report this issue to b.android.com.
+glReadPixels
+glReadPixels: GL communication error, please report this issue to b.android.com.
+glRenderbufferStorageMultisampleIMG
+glRenderbufferStorageOES
+glRotatef
+glRotatex
+glRotatexOES
+glSampleCoverage
+glSampleCoveragex
+glSampleCoveragexOES
+glScalef
+glScalex
+glScalexOES
+glScissor
+glSetFenceNV
+glShadeModel
+glSizeof
+glStartTilingQCOM
+glStencilFunc
+glStencilMask
+glStencilOp
+glTestFenceNV
+glTestFenceNV: GL communication error, please report this issue to b.android.com.
+glTexCoordPointer
+glTexCoordPointerData
+glTexCoordPointerOffset
+glTexEnvf
+glTexEnvfv
+glTexEnvi
+glTexEnviv
+glTexEnvx
+glTexEnvxOES
+glTexEnvxv
+glTexEnvxvOES
+glTexGenfOES
+glTexGenfvOES
+glTexGeniOES
+glTexGenivOES
+glTexGenxOES
+glTexGenxvOES
+glTexImage2D
+glTexParameterf
+glTexParameterfv
+glTexParameteri
+glTexParameteriv
+glTexParameterx
+glTexParameterxOES
+glTexParameterxv
+glTexParameterxvOES
+glTexSubImage2D
+glTranslatef
+glTranslatex
+glTranslatexOES
+glUnmapBufferOES
+glUnmapBufferOES: GL communication error, please report this issue to b.android.com.
+glUtilsCalcShaderSourceLen
+glUtilsPackPointerData
+glUtilsPackStrings
+glUtilsParamSize
+glUtilsParamSize: unknow param 0x%08x
+glUtilsPixelBitSize
+glUtilsPixelBitSize: unknown pixel format...
+glUtilsPixelBitSize: unknown pixel type - assuming pixel data 0
+glUtilsWritePackPointerData
+glVertexPointer
+glVertexPointerData
+glVertexPointerOffset
+glViewport
+glWeightPointerData
+glWeightPointerOES
+glWeightPointerOffset
+gold 1.11
+libGLESv1_enc.so
+libc++.so
+libc.so
+libcutils.so
+libdl.so
+liblog.so
+libm.so
+libutils.so
+memcmp
+memcpy
+memmove
+memset
+p#Fydh
+pthread_mutex_destroy
+pthread_mutex_init
+pthread_mutex_lock
+pthread_mutex_unlock
+realloc
+s_glActiveTexture
+s_glBindTexture
+s_glBufferData
+s_glBufferSubData
+s_glDeleteBuffers
+s_glDrawElements
+s_glTexParameterf
+s_glTexParameterfv
+s_glTexParameteri
+s_glTexParameteriv
+s_glTexParameterx
+s_glTexParameterxv
+s_glTexSubImage2D
+strcmp
+strlen
+t)>RAz
+unknown pixel size: width: %d height: %d format: %d type: %d pack: %d align: %d
+unsupported index buffer type %d
+v_}WhX
+vendor/twoyi/opengl/system/GLESv1_enc/GLEncoder.cpp
