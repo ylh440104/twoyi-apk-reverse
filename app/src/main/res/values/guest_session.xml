@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guest_session_channel">Guest session</string>
+    <string name="guest_session_title">Twoyi session active</string>
+    <string name="guest_session_body">Tap to return. Use Settings to shut down.</string>
+</resources>

@@ -121,6 +121,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         mLoadingView.startAnimation();
 
         if (started) {
+            GuestSessionService.start(this);
             // Do not reinstall or reinitialize a ROM that is already running.
             mRootView.addView(mSurfaceView, 0);
             showBootingProcedure();
@@ -144,6 +145,7 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         if (isFinishing() || isDestroyed()) {
             return;
         }
+        GuestSessionService.start(this);
         showTipsForFirstBoot();
         RomPreparation.ensureReady(getApplicationContext()).whenComplete((ignored, failure) ->
                 runOnUiThread(() -> {

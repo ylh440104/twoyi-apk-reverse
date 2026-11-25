@@ -82,7 +82,8 @@ public final class RomManager {
 
         try (Writer writer = new FileWriter(propFile)) {
             properties.store(writer, null);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to initialize ROM properties", e);
         }
     }
 

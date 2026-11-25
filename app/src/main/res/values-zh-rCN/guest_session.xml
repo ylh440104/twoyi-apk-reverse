@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guest_session_channel">两仪运行会话</string>
+    <string name="guest_session_title">两仪会话运行中</string>
+    <string name="guest_session_body">点击返回两仪，可在设置中关闭系统。</string>
+</resources>
