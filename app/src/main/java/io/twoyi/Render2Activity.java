@@ -104,9 +104,8 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
 
         // A completed guest session belongs to the process, not this Activity.
         // Keep its completion signal so a replacement window can observe it.
-        if (!started) {
-            TwoyiStatusManager.getInstance().reset();
-        }
+        // The process starts with an incomplete latch. Activity recreation
+        // must not reset it or race a BOOT_COMPLETED notification.
 
         NavUtils.hideNavigation(getWindow());
 
@@ -145,6 +144,9 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
     }
 
     private void bootSystem() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         boolean romExist = RomManager.romExist(this);
         boolean factoryRomUpdated = RomManager.needsUpgrade(this);
         boolean forceInstall = AppKV.getBooleanConfig(getApplicationContext(), AppKV.FORCE_ROM_BE_RE_INSTALL, false);
@@ -220,10 +222,25 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
 
                     runOnUiThread(() -> Toast.makeText(getApplicationContext(), R.string.boot_failed, Toast.LENGTH_SHORT).show());
 
-                    // A timeout is not proof that the guest has exited. In
-                    // particular, an obsolete Activity must never kill a newer
-                    // window's process. Leave explicit shutdown to Settings.
-                    return;
+                    // Continue observing a slow boot; a timeout is not proof
+                    // that the guest has exited. Destroying this view cancels
+                    // its observer without touching the process-owned guest.
+                    while (!isFinishing() && !isDestroyed()) {
+                        try {
+                            if (TwoyiStatusManager.getInstance().waitBoot(1, TimeUnit.SECONDS)) {
+                                success = true;
+                                break;
+                            }
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            return;
+                        } catch (java.util.concurrent.BrokenBarrierException e) {
+                            return;
+                        }
+                    }
+                    if (!success) {
+                        return;
+                    }
                 }
             }
 
