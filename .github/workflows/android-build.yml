@@ -1,0 +1,61 @@
+name: Android baseline build
+on:
+  push:
+    branches: [opensource-development]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  assemble:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          path: overlay
+      - name: Fetch pinned upstream shallow source and apply development changes
+        run: |
+          git init source
+          git -C source remote add origin https://github.com/twoyi/twoyi.git
+          git -C source fetch --depth 1 origin dd052a07a812e742ec7583da393466ccc066a8b1
+          git -C source checkout --detach FETCH_HEAD
+          rsync -a --exclude=.git --exclude=.github overlay/ source/
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+      - uses: android-actions/setup-android@v3
+      - name: Install pinned Android toolchain
+        run: sdkmanager 'platforms;android-31' 'build-tools;30.0.3' 'ndk;22.1.7171670'
+      - name: Compile Rust JNI with NDK directly
+        working-directory: source/app/rs
+        run: |
+          rustup target add aarch64-linux-android
+          export NDK_BIN="$ANDROID_HOME/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin"
+          export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$NDK_BIN/aarch64-linux-android27-clang"
+          export CC_aarch64_linux_android="$CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER"
+          export AR_aarch64_linux_android="$NDK_BIN/llvm-ar"
+          cargo build --locked --release --target aarch64-linux-android
+          cp target/aarch64-linux-android/release/libtwoyi.so ../src/main/jniLibs/arm64-v8a/
+      - name: Obtain matching legacy ROM on runner only
+        working-directory: source
+        run: |
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/legacy.apk" https://github.com/twoyi/twoyi/releases/download/0.5.4/twoyi_0.5.4-03211927-release.apk
+          sha256sum "$RUNNER_TEMP/legacy.apk" | tee legacy-apk.sha256
+          mkdir -p app/src/main/assets
+          unzip -p "$RUNNER_TEMP/legacy.apk" assets/rootfs.7z > app/src/main/assets/rootfs.7z
+          unzip -p "$RUNNER_TEMP/legacy.apk" assets/rom.ini > app/src/main/assets/rom.ini
+          test -s app/src/main/assets/rootfs.7z
+      - name: Assemble debug APK
+        working-directory: source
+        run: bash gradlew --no-daemon :app:assembleDebug -x cargoBuild --stacktrace
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opensource-baseline-build
+          retention-days: 7
+          path: |
+            source/app/build/outputs/apk/debug/*.apk
+            source/legacy-apk.sha256
+            source/app/build/reports/
