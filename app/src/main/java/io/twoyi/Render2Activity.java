@@ -39,9 +39,7 @@ import androidx.annotation.NonNull;
 import com.cleveroad.androidmanimation.LoadingAnimationView;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.twoyi.utils.AppKV;
 import io.twoyi.utils.LogEvents;
 import io.twoyi.utils.NavUtils;
 import io.twoyi.utils.RomManager;
@@ -62,7 +60,6 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
     private View mLoadingLayout;
     private View mBootLogView;
 
-    private final AtomicBoolean mIsExtracting = new AtomicBoolean(false);
 
     private final SurfaceHolder.Callback mSurfaceCallback = new SurfaceHolder.Callback() {
         @Override
@@ -147,55 +144,41 @@ public class Render2Activity extends Activity implements View.OnTouchListener {
         if (isFinishing() || isDestroyed()) {
             return;
         }
-        boolean romExist = RomManager.romExist(this);
-        boolean factoryRomUpdated = RomManager.needsUpgrade(this);
-        boolean forceInstall = AppKV.getBooleanConfig(getApplicationContext(), AppKV.FORCE_ROM_BE_RE_INSTALL, false);
-        boolean use3rdRom = AppKV.getBooleanConfig(getApplicationContext(), AppKV.SHOULD_USE_THIRD_PARTY_ROM, false);
-
-        boolean shouldExtractRom = !romExist || forceInstall || (!use3rdRom && factoryRomUpdated);
-
-        if (shouldExtractRom) {
-            Log.i(TAG, "extracting rom...");
-
-            showTipsForFirstBoot();
-
-            new Thread(() -> {
-                mIsExtracting.set(true);
-                RomManager.extractRootfs(getApplicationContext(), romExist, factoryRomUpdated, forceInstall, use3rdRom);
-                mIsExtracting.set(false);
-
-                RomManager.initRootfs(getApplicationContext());
-
+        showTipsForFirstBoot();
+        RomPreparation.ensureReady(getApplicationContext()).whenComplete((ignored, failure) ->
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
-                    mRootView.addView(mSurfaceView, 0);
+                    if (failure != null) {
+                        Log.e(TAG, "ROM preparation failed", failure);
+                        mLoadingView.stopAnimation();
+                        mLoadingText.setText(R.string.boot_failed);
+                        return;
+                    }
+                    if (mSurfaceView.getParent() == null) {
+                        mRootView.addView(mSurfaceView, 0);
+                    }
                     showBootingProcedure();
-                });
-            }, "extract-rom").start();
-        } else {
-            mRootView.addView(mSurfaceView, 0);
-            showBootingProcedure();
-        }
+                }));
     }
 
     private void showTipsForFirstBoot() {
         mLoadingText.setText(R.string.extracting_tips);
         mRootView.postDelayed(() -> {
-            if (mIsExtracting.get()) {
+            if (!isFinishing() && !isDestroyed() && RomPreparation.isExtracting()) {
                 mLoadingText.setText(R.string.first_boot_tips);
             }
         }, 5000);
 
         mRootView.postDelayed(() -> {
-            if (mIsExtracting.get()) {
+            if (!isFinishing() && !isDestroyed() && RomPreparation.isExtracting()) {
                 mLoadingText.setText(R.string.first_boot_tips2);
             }
         }, 10 * 1000);
 
         mRootView.postDelayed(() -> {
-            if (mIsExtracting.get()) {
+            if (!isFinishing() && !isDestroyed() && RomPreparation.isExtracting()) {
                 mLoadingText.setText(R.string.first_boot_tips3);
             }
         }, 15 * 1000);
