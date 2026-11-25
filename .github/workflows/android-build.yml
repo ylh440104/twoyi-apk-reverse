@@ -34,12 +34,12 @@ jobs:
       - name: Compile Rust JNI with NDK directly
         working-directory: source/app/rs
         run: |
-          rustup target add aarch64-linux-android
+          rustup toolchain install 1.60.0 --profile minimal --target aarch64-linux-android
           export NDK_BIN="$ANDROID_HOME/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin"
           export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$NDK_BIN/aarch64-linux-android27-clang"
           export CC_aarch64_linux_android="$CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER"
           export AR_aarch64_linux_android="$NDK_BIN/llvm-ar"
-          cargo build --locked --release --target aarch64-linux-android
+          cargo +1.60.0 build --locked --release --target aarch64-linux-android
           cp target/aarch64-linux-android/release/libtwoyi.so ../src/main/jniLibs/arm64-v8a/
       - name: Obtain matching legacy ROM on runner only
         working-directory: source
