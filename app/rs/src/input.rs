@@ -95,104 +95,74 @@ pub fn input_event_write(
     let _ = tx.send(ev);
 }
 
-pub fn handle_touch(ev: MotionEvent) {
-    let opt = INPUT_SENDER.lock().unwrap();
-    if let Some(ref fd) = *opt {
+static TOUCH_SLOTS: Lazy<Mutex<crate::touch_slots::TouchSlots<MAX_POINTERS>>> =
+    Lazy::new(|| Mutex::new(crate::touch_slots::TouchSlots::new()));
 
-        let action = ev.action();
-        let pointer_index = ev.pointer_index();
-        let pointer = ev.pointer_at_index(pointer_index);
-        let pointer_id = pointer.pointer_id();
-        let pressure = pointer.pressure();
-
-        // info!("action: {:#?}, pointer_index: {}", action, pointer_index);
-
-        static G_INPUT_MT: Lazy<Mutex<[i32;MAX_POINTERS]>> = Lazy::new(|| {std::sync::Mutex::new([0i32;MAX_POINTERS])});
-
-        match action {
-            MotionAction::Down | MotionAction::PointerDown => {
-                let x = pointer.x();
-                let y = pointer.y();
-
-                let mut mt = G_INPUT_MT.lock().unwrap();
-                mt[pointer_id as usize] = 1;
-
-                let mut index = 0;
-                while index < MAX_POINTERS {
-                    if mt[index] != 0 {
-                        input_event_write(fd, EV_ABS, ABS_MT_SLOT, pointer_id);
-                        input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, pointer_id + 1);
-
-                        if index == 0 {
-                            input_event_write(fd, EV_KEY, BTN_TOUCH, 108);
-                            input_event_write(fd, EV_KEY, BTN_TOOL_FINGER, 108);
-                        }
-
-                        input_event_write(fd, EV_ABS, ABS_MT_POSITION_X, x as i32);
-                        input_event_write(fd, EV_ABS, ABS_MT_POSITION_Y, y as i32);
-
-                        input_event_write(fd, EV_ABS, ABS_MT_PRESSURE, pressure as i32);
-
-                        input_event_write(fd, EV_SYN, SYN_REPORT, SYN_REPORT);
-                    }
-                    index = index + 1;
-                }
-            }
-            MotionAction::Up => {
-                // let x = pointer.x();
-                // let y = pointer.y();
-
-                let mut index = 0;
-                while index != MAX_POINTERS {
-                    let mut mt = G_INPUT_MT.lock().unwrap();
-                    if mt[index] != 0 {
-                        mt[index] = 0;
-                        input_event_write(fd, EV_ABS, ABS_MT_SLOT, index.try_into().unwrap());
-                        input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, -1);
-                        input_event_write(fd, EV_SYN, SYN_REPORT, SYN_REPORT);
-                    }
-                    index = index + 1;
-                }
-            }
-            MotionAction::Move => {
-                let mut index = 0;
-
-                while index != MAX_POINTERS {
-                    let mt = G_INPUT_MT.lock().unwrap();
-                    if mt[index] != 0 {
-                        let x = pointer.x();
-                        let y = pointer.y();
-                        let pressure = pointer.pressure();
-
-                        input_event_write(fd, EV_ABS, ABS_MT_SLOT, index.try_into().unwrap());
-                        input_event_write(fd, EV_ABS, ABS_MT_POSITION_X, x as i32);
-                        input_event_write(fd, EV_ABS, ABS_MT_POSITION_Y, y as i32);
-
-                        input_event_write(fd, EV_ABS, ABS_MT_PRESSURE, pressure as i32);
-
-                        input_event_write(fd, EV_SYN, SYN_REPORT, SYN_REPORT);
-                    }
-
-                    index = index + 1;
-                }
-            }
-            MotionAction::Cancel | MotionAction::PointerUp => {
-                // let x = pointer.x();
-                // let y = pointer.y();
-
-                let mut mt = G_INPUT_MT.lock().unwrap();
-                if mt[pointer_id as usize] == 0 {
-                    return;
-                }
-
-                mt[pointer_id as usize] = 0;
-                input_event_write(fd, EV_ABS, ABS_MT_SLOT, pointer_id);
-                input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, -1);
-                input_event_write(fd, EV_SYN, SYN_REPORT, SYN_REPORT);
-            }
-            _ => {}
+fn release_all(fd: &Sender<input_event>, slots: &mut crate::touch_slots::TouchSlots<MAX_POINTERS>) {
+    for (slot, id) in slots.clear().iter().enumerate() {
+        if id.is_some() {
+            input_event_write(fd, EV_ABS, ABS_MT_SLOT, slot as i32);
+            input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, -1);
         }
     }
+    input_event_write(fd, EV_KEY, BTN_TOUCH, 0);
+    input_event_write(fd, EV_KEY, BTN_TOOL_FINGER, 0);
+}
+
+pub fn handle_touch(ev: MotionEvent) {
+    let sender = INPUT_SENDER.lock().unwrap();
+    let fd = match sender.as_ref() { Some(fd) => fd, None => return };
+    let mut slots = TOUCH_SLOTS.lock().unwrap();
+    match ev.action() {
+        MotionAction::Cancel | MotionAction::Up => {
+            release_all(fd, &mut slots);
+        }
+        MotionAction::Down | MotionAction::PointerDown => {
+            if ev.pointer_index() >= ev.pointer_count() { return; }
+            if ev.action() == MotionAction::Down {
+                // A new gesture also recovers from an unobserved previous cancel.
+                release_all(fd, &mut slots);
+            }
+            let pointer = ev.pointer_at_index(ev.pointer_index());
+            let id = pointer.pointer_id();
+            if let Some(slot) = slots.press(id) {
+                input_event_write(fd, EV_KEY, BTN_TOUCH, 1);
+                input_event_write(fd, EV_KEY, BTN_TOOL_FINGER, 1);
+                input_event_write(fd, EV_ABS, ABS_MT_SLOT, slot as i32);
+                input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, id);
+                input_event_write(fd, EV_ABS, ABS_MT_POSITION_X, pointer.x() as i32);
+                input_event_write(fd, EV_ABS, ABS_MT_POSITION_Y, pointer.y() as i32);
+                input_event_write(fd, EV_ABS, ABS_MT_PRESSURE,
+                    (pointer.pressure().max(0.0).min(1.0) * 80.0) as i32);
+            }
+        }
+        MotionAction::Move => {
+            for index in 0..ev.pointer_count() {
+                let pointer = ev.pointer_at_index(index);
+                if let Some(slot) = slots.find(pointer.pointer_id()) {
+                    input_event_write(fd, EV_ABS, ABS_MT_SLOT, slot as i32);
+                    input_event_write(fd, EV_ABS, ABS_MT_POSITION_X, pointer.x() as i32);
+                    input_event_write(fd, EV_ABS, ABS_MT_POSITION_Y, pointer.y() as i32);
+                    input_event_write(fd, EV_ABS, ABS_MT_PRESSURE,
+                        (pointer.pressure().max(0.0).min(1.0) * 80.0) as i32);
+                }
+            }
+        }
+        MotionAction::PointerUp => {
+            if ev.pointer_index() >= ev.pointer_count() { return; }
+            let id = ev.pointer_at_index(ev.pointer_index()).pointer_id();
+            if let Some(slot) = slots.release(id) {
+                input_event_write(fd, EV_ABS, ABS_MT_SLOT, slot as i32);
+                input_event_write(fd, EV_ABS, ABS_MT_TRACKING_ID, -1);
+                if slots.is_empty() {
+                    input_event_write(fd, EV_KEY, BTN_TOUCH, 0);
+                    input_event_write(fd, EV_KEY, BTN_TOOL_FINGER, 0);
+                }
+            }
+        }
+        _ => return,
+    }
+    input_event_write(fd, EV_SYN, SYN_REPORT, 0);
 }
 
 fn generate_touch_device(width: i32, height: i32) -> device_info {
@@ -239,7 +209,8 @@ fn generate_touch_device(width: i32, height: i32) -> device_info {
     info.abs_min[ABS_MT_TOUCH_MAJOR as usize] = 0;
     info.abs_min[ABS_MT_TOUCH_MINOR as usize] = 15;
 
-    info.abs_min[ABS_MT_SLOT as usize] = 4;
+    info.abs_min[ABS_MT_SLOT as usize] = 0;
+    info.abs_max[ABS_MT_SLOT as usize] = (MAX_POINTERS - 1) as u32;
     info.abs_min[ABS_MT_PRESSURE as usize] = 0;
     info.abs_max[ABS_MT_PRESSURE as usize] = 80;
 
@@ -260,7 +231,11 @@ fn touch_server(width: i32, height: i32) {
                 }
 
                 let (tx, rx) = channel::<input_event>();
-                *INPUT_SENDER.lock().unwrap() = Some(tx);
+                {
+                    let mut sender = INPUT_SENDER.lock().unwrap();
+                    TOUCH_SLOTS.lock().unwrap().clear();
+                    *sender = Some(tx);
+                }
 
                 thread::spawn(move || {
                     crate::event_stream::forward_events(rx, |ev| {
