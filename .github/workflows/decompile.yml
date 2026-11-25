@@ -115,16 +115,20 @@ jobs:
           mkdir -p report/jadx
           cp -f "$RUNNER_TEMP/jadx.log" report/jadx/jadx.log || true
           find "$RUNNER_TEMP/jadx-out" -maxdepth 2 -type d | sed "s|$RUNNER_TEMP/jadx-out|jadx-out|" | sort | head -100 > report/jadx/tree.txt || true
-          # keep the app's own packages only (this is where the interesting logic lives)
+          # Discover the app's own packages (the name may differ between releases)
+          SRC="$RUNNER_TEMP/jadx-out/sources"
+          ls "$SRC" > report/jadx/top-level-packages.txt 2>/dev/null || true
+          find "$SRC" -maxdepth 3 -type d | sed "s|$SRC/||" | sort > report/jadx/packages.txt || true
+          # keep only the vendor packages: anything with "twoyi" in the path
           mkdir -p decompiled/sources
-          for pkg in io/twoyi io/twoyi/* io/twoyi/*/* twoyi; do
-            src="$RUNNER_TEMP/jadx-out/sources/$pkg"
-            if [ -d "$src" ]; then
-              mkdir -p "decompiled/sources/$(dirname "$pkg")"
-              rsync -a "$src" "decompiled/sources/$(dirname "$pkg")/" || true
-            fi
-          done
+          find "$SRC" -maxdepth 3 -type d -iname '*twoyi*' -print0 2>/dev/null \
+            | while IFS= read -r -d '' d; do
+                rel="${d#$SRC/}"
+                mkdir -p "decompiled/sources/$(dirname "$rel")"
+                rsync -a "$d" "decompiled/sources/$(dirname "$rel")/" || true
+              done
           find decompiled -name '*.java' | wc -l > report/jadx/committed-java-count.txt || true
+          du -sh decompiled >> report/jadx/committed-java-count.txt || true
 
       - name: Native libraries
         run: |
@@ -162,8 +166,14 @@ jobs:
             blob="$RUNNER_TEMP/rootfs/$(basename "$entry")"
             [ -f "$blob" ] || continue
             echo "== $(basename "$entry") $(stat -c%s "$blob") bytes"
-            7z l "$blob" > "report/rootfs/listing-$(basename "$entry").txt" 2>&1 || true
-            head -60 "report/rootfs/listing-$(basename "$entry").txt"
+            L="report/rootfs/listing-$(basename "$entry").txt"
+            7z l "$blob" > "$RUNNER_TEMP/listing.full" 2>&1 || true
+            {
+              echo "# 7z listing of $(basename "$entry") (first 4000 lines; total $(wc -l < "$RUNNER_TEMP/listing.full") lines)"
+              echo
+              head -4000 "$RUNNER_TEMP/listing.full"
+            } > "$L"
+            head -30 "$L"
             # count entries by top-level path
             grep -E '^\S+ \S+ +[0-9]+' "report/rootfs/listing-$(basename "$entry").txt" 2>/dev/null | head -0 || true
             # extract only tiny metadata / boot scripts, never the whole system
