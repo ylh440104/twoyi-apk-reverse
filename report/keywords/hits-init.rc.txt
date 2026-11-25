@@ -1,2 +1,0 @@
-# Queued by init only in App Zygote builds: a direct guest logs to the host
-# logd, an App Zygote guest cannot reach it and runs its own.

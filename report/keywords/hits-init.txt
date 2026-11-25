@@ -1,3 +1,0 @@
-/data/data/io.twoyi/loader64
-/dev/input
-TYLOADER

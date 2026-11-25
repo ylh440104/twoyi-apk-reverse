@@ -1,0 +1,41 @@
+name: Host regression tests
+
+on:
+  push:
+    paths:
+      - 'app/src/main/java/io/twoyi/**'
+      - 'app/rs/src/**'
+      - 'tools/test_boot_state.py'
+      - '.github/workflows/host-tests.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  boot-state:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Test actual boot state class with Android API stubs
+        run: python3 tools/test_boot_state.py
+
+  input-stream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Test input forwarding without Android dependencies
+        run: |
+          rustc --edition=2021 --test app/rs/src/event_stream.rs -o "$RUNNER_TEMP/event-stream-tests"
+          timeout 20 "$RUNNER_TEMP/event-stream-tests"

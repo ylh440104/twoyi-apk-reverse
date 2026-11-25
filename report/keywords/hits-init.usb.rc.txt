@@ -1,1 +1,0 @@
-# Twoyi: adbd serves TCP only and the guest has no USB, so USB state never
